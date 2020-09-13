@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>A Simple J2ee Project : Cafe</title>
+
+	<meta name="description" content="">
+
+	<meta name=”viewport” content=”width=device-width, initial-scale=1″>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&display=swap" rel="stylesheet">
+
+	<link href="images/" rel="icon" type="image/png" />
+
+	<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+	<link rel="stylesheet" href="css/bootstrap.css">
+
+	<style type="text/css">
+		html,body,
+		div, span, p, blockquote,
+		h1, h2, h3, h4{
+			color:#333333;
+			color:#19191B;
+			font-family:'Roboto';
+		}
+		h1{
+			font-weight:900;
+			font-size:102px !important;
+			text-align: left;
+		}
+		h2{
+			font-size:73px;
+			text-align: left;
+			margin-top:70px;
+			font-weight:900;
+			line-height: 1.7em;
+		}
+		h3{
+			font-size:39px;
+			font-weight:900;
+			text-align: left;
+			margin:40px auto 10px;
+		}
+		#logo{
+			margin-top:72px;
+		}
+		#title{
+			font-size:27px;
+			display:block;
+			text-align: center;
+			padding:0px !important;
+			margin:30px 0px 3px 0px !important;
+		}
+		#cover{
+			width:64% !important;
+			margin-left:20px !important;
+			float:left
+		}
+		#subtitle{
+			font-size:21px;
+			display:block;
+			text-align: center;
+			margin:0px 0px 27px 0px;
+		}
+		h1#and-if{
+			font-size:172px !important;
+			line-height:1.4em !important;
+		}
+		#content{
+			/**width:652px;**/
+			margin:0px auto 400px auto !important;
+			font-family:arial;
+			font-size:27px !important;
+			line-height:1.82em !important;
+			text-align:left;
+		}
+		#like-share{
+			text-align: center;
+			margin:0px !important;
+		}
+		#challenge{
+			margin-top:172px;
+			display:block;
+		}
+		#africa-container{
+			padding:0px;
+			height:352px;
+			margin:30px auto 89px auto !important;
+		}
+		#africa{
+			margin:0px 0px 0px 0px;
+		}
+		.fb-like{
+			margin-bottom:12px;
+		}
+		p{
+			text-align: left;
+			margin:20px 0px !important;
+		}
+		.emphasis{
+			font-size:1.7em;
+			line-height:2.3em;
+		}
+		.space-it{
+			margin-top:102px !important;
+		}
+		.big{
+			font-size:2.3em;
+		}
+
+		.minor{
+			font-size:.52em;
+		}
+
+		.bold{
+			font-weight:bold;
+		}
+
+		img{
+			margin:auto;
+		}
+		img.left{
+			margin:0px !important;
+		}
+		blockquote{
+			color:#777;
+			margin-top:300px;
+		}
+		.github-button{
+			margin-bottom:30px;
+			position:relative;
+			display:inline-block;
+			padding-bottom:30px;
+		}
+		.large{
+			font-size:67px;
+		}
+		.italic{
+			font-style:italic;
+		}
+		.center{
+			text-align: center;
+		}
+
+		#buy-the-book{
+			display:block;
+			z-index:10001;
+			position: fixed;
+  			transform: rotate(45deg); /* Equal to rotateZ(45deg) */
+			top:60px;
+			right:-400px;
+			height:40px;
+			width:1000px;
+			color:#fff;
+			font-size:23px;
+			padding-top:3px;
+			font-family: Georgia;
+			text-align: center;
+			background:#323232;
+			-webkit-box-shadow: 0px 0px 26px 0px rgba(163,160,163,1);
+			-moz-box-shadow: 0px 0px 26px 0px rgba(163,160,163,1);
+			box-shadow: 0px 0px 26px 0px rgba(163,160,163,1);
+			-webkit-animation-name: logo-logo; /* Safari 4.0 - 8.0 */
+		    -webkit-animation-duration: 4s; /* Safari 4.0 - 8.0 */
+		    animation-name: logo-logo;
+		    animation-iteration-count: infinite;
+		    animation-duration: 73s;
+			text-decoration: none;    
+		}
+
+		/* Safari 4.0 - 8.0 */
+		@-webkit-keyframes logo-logo {
+		  0%  {background: #323232;}
+		  43%  {background: #E34B86;}
+		  81% {background: #12ADFD;}
+		  100% {background: #323232;}
+		}
+
+		@keyframes logo-logo {
+		  0%  {background: #323232;}
+		  43%  {background: #E34B86;}
+		  81% {background: #12ADFD;}
+		  100% {background: #323232;}
+		}
+
+		span em{
+			font-family:Georgia;
+			font-style:normal;
+		}
+
+		#player{
+			margin-top:10px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<!--<a href="https://www.amazon.com/dp/0359620736" id="buy-the-book"><img src="images/buy-the-book.png"/></a>-->
+
+	<a href="https://www.amazon.com/dp/0359620736" id="buy-the-book">Buy the Book!</a>
+
+
+
+	<div id="content" class="container">
+
+		<div class="col-md-2">&nbsp;</div>
+
+
+		<div class="col-md-7">
+
+
+			<div id="zeus-actions-wrapper" data-uri="www.vocebonita.xyz" style="position:absolute; top:40px; right:0px; line-height:1.0em !important">
+			    <div id="zeus-inner-wrapper">
+			        <a href="javascript:" id="launch-zeus"><img src="http://www.zeus.social/b/images/zeus-launcher.png"/></a>
+			        <span id="zeus-likes" style="font-weight:normal"><span id="likes-span"></span> likes</span>
+			        <span id="zeus-shares" style="top:20px !important; font-weight: normal;"><span id="shares-span"></span> shares</span>
+			        <span id="zeus" style="font-weight:normal;">Zeus</span>
+			    </div>
+			</div>
+			<script type="text/javascript" src="http://www.zeus.social/b/js/Resource.js"></script>
+
+
+			<h1 id="title">Cafe</h1>
+
+			<h2 id="subtitle">A Simple J2ee Project</h2>
+
+			<p>This will walk you through step by step creating a simple blog application running locally on your development machine running <strong>h2</strong> and <strong>Jetty</strong>. This will not dive too far into details, rather give you a 10,000 foot view of <strong>J2ee</strong> architecture.</p>
+			
+			<h3>What is J2ee</h3>
+
+			<p><strong>J2ee</strong> is short for <strong>Java Web Application Development</strong>. It is enterprise ready! It is modular, secular and beautiful! We hope you enjoy it as much as we do. Without further adoo, let's go into further... and build our Cafe</p>
+
+			<img src="images/cafe.jpg" style="width:100%" class="left"/>
+
+			<br/>
+
+			<pre>mkdir -p src/main/java/xyz/cafe/dao</pre>
+
+			<p><span class="emphasis bold large">Evolution <br/>does not exist!</span><br/>
+			<br/>
+			<!--<span class="emphasis bold">Let me repeat, it does not exist!</span><br/>-->
+			Each race was created. <br/><span class="minor">Each race was designed.</span>
+			<span><em>There is a purpose!</em> </span>
+			<br/><span class="emphasis bold large">A grand purpose...</span>
+			<br/><span>Each race created independently.</span><br/> <span class="emphasis bold large">Evolution does not exist.</span></p>
+
+			<div id="africa-container">
+				<!-- <img src="images/africa-cropped.png" id="africa" style="height:100%"/> -->
+				<img src="images/china_intro.png" style="height:100%"/>
+			</div>
+
+			<p>Let's continue... In order to create a unique and different World, a World that could not be created with one race... each one of our cultures was created independently, each one of us <strong>Original in Design.</strong></p>
+
+
+			<p>There are distinct differences between all the cultures here on Earth. Observe a few cultures some which are neighboring and ask how did they come to be? 
+				<!--Was each created independently, or one created with adaption and evolution.--></p>
+
+			<p style="margin: 40px 0px 72px 0px !important;">Let's take a look...
+			</p>
+			
+
+
+			<h3>India</h3>
+
+			<img src="images/people_india.jpg" style="width:100%"/>
+
+
+			<h3>Saudi Arabia</h3>
+
+			<img src="images/people_saudi_arabia.png" style="width:100%"/>
+				
+
+			<h3>Germany</h3>
+
+			<img src="images/people_germany.jpg" style="width:100%"/>
+			
+
+			<h3>Russia</h3>
+
+			<img src="images/people_russia.jpg" style="width:100%"/>
+			
+
+			<h3>Africa</h3>
+
+			<img src="images/people_africa.jpg" style="width:100%"/>
+
+			
+			<h3>Mexico</h3>
+
+			<img src="images/people_mexico.jpg" style="width:100%"/>
+
+
+			<h3>Brazil</h3>
+
+			<img src="images/brazil_people.jpg" style="width:100%;"/>
+			
+
+			<h3>China</h3>
+
+			<img src="images/people_china.jpg" style="width:100%"/>
+
+
+			
+			<h2>We are all different</h2>
+			<p>... It is plain as day.</p> 
+			<p><span class="italic">There is no environmental component, weather pattern or diet that shaped us individual people over time.</span> <strong>Evolution does not exist.</strong></p>
+
+			
+			<p>In detail, observing images above, you can start to think about the cultures, architecture, food and lives of the people. Each are different. Start to combine the cultures and people and you have something unique, something different, something new that the our Grand Architect could not create with one race.</p>
+
+			<p><strong>Do you understand?</strong> Let me explain: </p>
+
+
+			<p>If one race or culture occupied the planet, all organizations of people would look the same. However, mix in some variety, more than one race and you have the possibility of cultures working together to create a unique civilization, a unique World. Like ingredients to an ultimate recipe, we, each group or race of people are designed to be part of a Grand design... an ultimate Design!</p>
+
+			<p>...This includes architecture, music, culinary arts, spirits, dance and movement, how we interact, anything and everything, we could create a unique and different World, it will happen so long as every human being is allowed to live freely. Change will happen.</p>
+
+
+			<p class="italic">Borders need to be open while remaing. Never, and I mean never do a way with pre-existing cultures, but promote while supporting collaboration and love among every culture. Invisible borders with <span class="emphasis">open doors...<br/> everywhere on Earth!</span></p>
+
+
+			<br/>
+			<br/>
+			<p id="challenge" style="margin-top:172px;">So you want to challenge the existence of God and the idea of creationism a little bit...</p>
+
+			<h1 style="line-height:1.4em; font-size:79px !important">The Existence of God...</h1>
+
+			<p>It can be proven within the definitive design in nature, and mathematics within the design. Take a look at the following image. Ask how did it come to be?</p>
+
+
+			<img src="images/aloe_plant_math.jpg" style="width:100%"/>
+
+
+			<p>Do you see the uniformity and math within the design? You should, it's there. There is no challenging it. If Math is visible within the design, that means that there was <strong>creationism.</strong> No questioning it. There is uniformity in the design of many things on our beautiful planet, including us.</p>
+
+			
+			<p><span class="emphasis bold">More proof that we were created.</span> Let's do an exercise...</p>
+			
+			<p>I want you to take a look at your hand. Look at your hand from the side, do so while starting to wiggle your fingers and move your hand back and forth. Do this in front of a plant.</p>  
+
+
+			<img src="images/hand.png" style="width:37%"/>
+
+
+			<p>It's important that you perform this exercise next to or in front of a plant. Spend at least a 15 seconds performing this exercise, ask the question while performing this, "Does the hand belong, is the human hand foreign?"</p> 
+
+
+			<img src="images/leaf-cropped.jpg" style="width:100%;margin-bottom:30px;"/>
+
+			
+			<p>The hand is foreign, the human existence is foreign, we all together everything human is foreign. <h3 class="emphasis">We did not grow or originate from Earth. We were created, created by God. We did not evolve. Were we created.</h3></p>
+
+			<p>Let's consider the single celled organism theory, that we all originated including animal life from a single celled organism, it is a harsh reality that the amount of data that would need to reside within the starting single celled organism would be very large.</p>
+
+			<p><span class="italic">It cannot be stressed enough that life on Earth would be very very strange if evolution were true. Evolution does not exist, we did not originate from a single celled organism.</span> <strong>We were created.</strong></p>
+			
+
+			<p class="minor">There is only so much preference data that can stored within DNA...</p>
+
+			<!--
+			<p><span class="emphasis">By now</span> depending on your background, the "Single Celled" theory should be dismissed. <span class="emphasis">There is in fact a God, a grand Architect at work.</span></p>
+			-->
+
+			<p class="emphasis bold" style="font-size:72px;">The Solar System</p>
+
+			<img src="images/solar_system.jpg" style="width:100%;margin-bottom:21px;"/>
+
+
+			<p>And in short synopsis... The solar system consists of 8 planets that orbit the Sun. These planets orbit in a horizontal fashion. While orbiting these planets tilt and rotate... its systematic, uniform in design. An Architect is at play. It was created, we were created.</p>
+
+			
+			<p class="emphasis bold space-it">In conclusion...</p>
+			
+			<p>... Again, there are differences in preferences between different cultures or organizations of people. If two cultures worked together to create, that something would turn out to be unique, something different, a unique blend. Blends can be something as simple as food or drink, something like Cherry Sprite or Ginger Ale with Lemonade, both can be seen as unique blends.</p>
+
+			<!--
+			<p>We can go even a little further in our conclusion....</p>
+
+			<p>...if two different races were to bare a child, the preferences for that child would be unique... a blend. He or she would have preferences from both cultures and may in turn prefer something new... again a blend. <span class="bold">You don't need to believe in intercultural relationships in order to believe in our Grand Design.</span> It does however need to be allowed to happen, and happen naturally, and organically.</h2>
+			-->
+
+			<p>A unique world has an opportunity of happening</p>
+
+			<p class="minor">It has an opportunity...</p>
+
+
+
+			<img src="images/sinhala.png" style="margin-top:300px;"/>
+
+			<p>This is "Thank you!" in Sinhala, language of Sri Lanka. It is probably the most interesting language... 
+				<!--<strong>intergalactic.</strong>-->
+			</p> 
+
+
+
+
+			<blockquote>
+				<!-- Before women &rarr; buy plants<br/> -->
+
+				<!--
+				<a class="github-button" href="https://github.com/mcroteau/architect" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star mcroteau/architect on GitHub">Star</a>
+
+				<br/>
+
+				<a href="http://www.lulu.com/shop/http://www.lulu.com/shop/mike-croteau/architect/paperback/product-24097762.html">Book</a>
+				
+				<br/>
+				
+				<a href="http://www.lulu.com/commerce/index.php?fBuyContent=24190322"><img src="http://static.lulu.com/images/services/buy_now_buttons/en/book_blue.gif?20190510072901" border="0" alt="Support independent publishing: Buy this book on Lulu."></a>
+				
+				-->
+
+			</blockquote>
+
+
+
+			<blockquote style="margin-bottom:410px;">
+				Thou shall promote ones culture<br/>
+				Thou shall support disaggregated love
+			</blockquote>
+
+
+			<blockquote style="margin-bottom:410px;">
+				172
+			</blockquote>
+
+
+			<h3>Sweden</h3>
+
+			<img src="images/people_sweden.jpg" style="width:100%;"/>
+			
+
+			<h3>France</h3>
+
+			<img src="images/people_france.jpg" style="width:100%;"/>
+	
+
+			<h3>South Korea</h3>
+
+			<img src="images/people_korea.jpg" style="width:100%"/>
+
+			<h3>Japan</h3>
+
+			<img src="images/people_japan.jpg" style="width:100%"/>
+
+
+			<h3>United States</h3>
+
+			<img src="images/us_people_cropped.jpg" style="width:100%;"/>
+			
+
+<!--
+			<div class="fb-like" data-href="https://www.facebook.com/Architect-452118662278989" data-width="" data-layout="button_count" data-action="like" data-size="large" data-show-faces="true" data-share="true" style="margin-top:42px"></div> -->
+
+
+			<!--
+			<img src="images/spruce_tree.jpg" style="width:100%; margin-bottom:1000px;"/>
+			-->
+
+
+			<!-- Global site tag (gtag.js) - Google Analytics -->
+			<script async src="https://www.googletagmanager.com/gtag/js?id=UA-40862316-11"></script>
+			<script>
+			  window.dataLayer = window.dataLayer || [];
+			  function gtag(){dataLayer.push(arguments);}
+			  gtag('js', new Date());
+
+			  gtag('config', 'UA-40862316-11');
+			</script>
+
+
+			<p class="center space-it">&copy; VoceBonita</p>
+
+
+		</div>
+
+		<div class="col-md-3">&nbsp;</div>
+
+		</div>
+	</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
