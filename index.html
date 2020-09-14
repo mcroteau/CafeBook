@@ -64,6 +64,12 @@
 			text-align: center;
 			margin:0px 0px 27px 0px;
 		}
+		#subtitle-dos{
+			font-size:39px;
+			display:block;
+			text-align: center;
+			margin:0px 0px 27px 0px;
+		}
 		h1#and-if{
 			font-size:172px !important;
 			line-height:1.4em !important;
@@ -224,6 +230,7 @@
 			<h1 id="title">Cafe</h1>
 
 			<h2 id="subtitle">A Simple J2ee Project</h2>
+			<h3 id="subtitle-dos">Java Web Application Sample</h3>
 
 			<p>This will walk you through step by step and we will create
 				a simple blog application running locally on your development
@@ -244,23 +251,22 @@
 
 			<h2>First things first...</h2>
 
-			<p>We need to install OpenJdk and Maven. Installing simply means
-			downloading the binaries and adding it to your system path. Here is
-			how to do this.</p>
+			<p>We need to install <strong>OpenJdk</strong> which will be our
+				Java binary distribution and <strong>Maven</strong> our build tool.
+				Installing simply means downloading the binaries and adding them to
+				your system path. Here is how it is done.</p>
 
-			<p>Browse to <pre>https://adoptopenjdk.net/</pre> and select an OpenJdk
-			download. Download then open up your <pre>~/.bashrc</pre> and add the following
-			lines:</p>
+			<p>Browse to <a href="https://adoptopenjdk.net" target="_blank">https://adoptopenjdk.net</a>
+				 and select a OpenJdk to download. Download &amp; unpack... </p>
 
-			<pre>export JAVA_HOME=/{{location of java binary}}
-export PATH=$PATH:$JAVA_HOME/bin</pre>
-
-			<p>Next we need to add Maven. Maven is our build tool, it will find &amp;
+			<p>Next we need to download Maven. Maven is our build tool, it will find &amp;
 				download project dependencies for us and compile the project when
-				deploying or running locally.</p>
+				deploying or running locally. Download then open up your <strong>.bashrc</strong>
+				it is located in the home directory, if it's not there you will need to create
+				it. <strong>~/</strong> means root or home directory.
+				Open up a command prompt and type on a mac:</p>
 
-			<pre>export MAVEN_HOME=/{{location of maven binary}}
-export PATH=$PATH:$MAVEN_HOME/bin</pre>
+			<pre>open ~/.bashrc</pre>
 
 			<p>Our final <strong>.bashrc</strong> should look something like:</p>
 
@@ -273,13 +279,18 @@ export PATH=$PATH:$JAVA_HOME/bin
 export MAVEN_HOME=/Users/mcroteau/Development/Tools/apache-maven-3.6.3
 export PATH=$PATH:$MAVEN_HOME/bin</pre>
 
-			<p>Now lets "Source" which means compile our <strong>.bashrc</strong>
-			so that java commands and maven commands are available!</p>
+			<p>Now lets "Source" which means execute our <strong>.bashrc</strong>
+			so that java commands and maven commands are available! In the same
+				command prompt type:</p>
 
 			<pre>source ~/.bashrc</pre>
 
-			<p>We should now be able to type <strong>Java</strong>
-				and <strong>Maven</strong> commands!</p>
+			<p>We will be working within the same command prompt for most of the time.
+			We will need to open up another terminal/command prompt in the future
+				in addition to this one.</p>
+
+			<p>We should now be able to type <strong>java</strong>
+				and <strong>mvn</strong> commands!</p>
 
 			<pre>java -version</pre>
 
@@ -292,27 +303,38 @@ OpenJ9   - 34cf4c075
 OMR      - 113e54219
 JCL      - c82ff0c20f based on jdk8u265-b01)</pre>
 
+			<p>Do the same for Maven, type:</p>
+
+			<pre>mvn --version</pre>
+
+			<p>It should output something like:</p>
+
+			<pre>
+Apache Maven 3.6.3 (cecedd343002696d0abb50b32b541b8a6ba2883f)
+Maven home: /Users/mcroteau/Development/Tools/maven-current
+Java version: 1.8.0_265, vendor: Eclipse OpenJ9, runtime: /Library/Java/JavaVirtualMachines/adoptopenjdk-8-openj9.jdk/Contents/Home/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "mac os x", version: "10.11.6", arch: "x86_64", family: "mac"
+			</pre>
+
 			<h3>Congratulations!</h3>
 			<p>You are on your way... let's get started.</p>
 
+
+			<h3>Project Structure</h3>
+
 			<p>We need to create our project structure</p>
 
-			<p>First let create our project... open up a command prompt and
-			type:</p>
-
-			<pre>mkdir Cafe</pre>
-
-			<p>then cd into your new <strong>Cafe</strong> directory</p>
-
-			<pre>cd Cafe</pre>
-
-			<p>Now we will create step by step each directory or folder that will
-				hold supporting <strong>Servlets</strong>, <strong>Data Access Objects</strong>
+			<p>Create directories or folders for
+				supporting <strong>Servlets</strong>,
+				<strong>Data Access Objects</strong>
 				and <strong>Models</strong>.</p>
 
-			<p>Your project structure should look like:</p>
+			<p>The project structure should look like:</p>
 
-<pre>Cafe/src/main/java/xyz/cafe/access
+<pre>
+Cafe/
+Cafe/src/main/java/xyz/cafe/access
 Cafe/src/main/java/xyz/cafe/common
 Cafe/src/main/java/xyz/cafe/dao
 Cafe/src/main/java/xyz/cafe/model
@@ -321,32 +343,13 @@ Cafe/src/main/java/xyz/cafe/web/post
 Cafe/src/main/webapp/jsp/post
 Cafe/src/main/WEB-INF</pre>
 
-			<p>First lets create our directory to hold common Java files.</p>
-
-			<pre>mkdir -p src/main/java/xyz/cafe/common</pre>
-
-			<p>Let's do the same for <strong>Data Access Objects</strong> otherwise
-				known as <strong>DAO</strong></p>
-
-			<pre>mkdir -p src/main/java/xyz/cafe/dao</pre>
-
-			<p>Models or Domains</p>
-
-			<pre>mkdir -p src/main/java/xyz/cafe/models</pre>
-
-			<p>Startup</p>
-
-			<pre>mkdir -p src/main/java/xyz/cafe/startup</pre>
-
-			<p>Web or Controllers</p>
-
-			<pre>mkdir -p src/main/java/xyz/cafe/web</pre>
+			<p>Make sure all directories are created.</p>
 
 			<p>If you are developer already then you are probably familiar with this
 			project setup. If not, this is the cleanest most awesome way to configure
 			your project. The pattern is called MVC which stands for Model View Controller.
-			We will get to our views in a second. We already have <strong>web</strong> for
-			controllers, and <strong>model</strong> for our models.</p>
+			We have <strong>web</strong> for controllers, and <strong>model</strong> for our models.
+			and <strong>jsp</strong> for our views.</p>
 
 
 			<p class="center space-it">&copy; OpenCafe</p>
