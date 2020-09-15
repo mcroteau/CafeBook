@@ -217,7 +217,7 @@
 
 		<div class="col-md-7">
 
-			<div id="zeus-actions-wrapper" data-uri="www.vocebonita.xyz" style="position:absolute; top:40px; right:0px; line-height:1.0em !important">
+			<div id="zeus-actions-wrapper" data-uri="www.opencafe.xyz" style="position:absolute; top:40px; right:0px; line-height:1.0em !important">
 			    <div id="zeus-inner-wrapper">
 			        <a href="javascript:" id="launch-zeus"><img src="http://www.zeus.social/b/images/zeus-launcher.png"/></a>
 			        <span id="zeus-likes" style="font-weight:normal"><span id="likes-span"></span> likes</span>
@@ -353,19 +353,20 @@ Cafe/src/main/WEB-INF</pre>
 
 			<h3>Now for the fun stuff...</h3>
 
-			<p>Create a file, name it <strong>pom.xml</strong>. The pom.xml will
+			<p>Create a file within the root Cafe directory,
+				name it <strong>pom.xml</strong>. The pom.xml will
 			be our main project configuration file. We will list our project
 			dependencies within it. We will also configure a build &amp; run plugin
 			to test our project.</p>
 
 			<p>We are going to start from scratch so paste the following into that
-				new file:</p>
+				new pom.xml file:</p>
 <pre>
 &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
 	xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
 	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt;
     &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-    &lt;groupId&gt;xyz.ioc&lt;/groupId&gt;
+    &lt;groupId&gt;xyz.cafe&lt;/groupId&gt;
     &lt;artifactId&gt;cafe&lt;/artifactId&gt;
     &lt;version&gt;0.1&lt;/version&gt;
     &lt;packaging&gt;war&lt;/packaging&gt;
@@ -443,6 +444,143 @@ Cafe/src/main/WEB-INF</pre>
 </pre>
 
 
+			<p>What we've done above is configured and told Maven
+				to look for all the dependencies within the <strong>dependencies</strong>
+				element, where to look for our Java source files, what version of Java
+				to compile under and configured the project to use <strong>Jetty</strong>
+				to run it in development mode.</p>
+
+
+			<p>Now let's configure the project as a Web project by adding a
+			<strong>web.xml</strong>. </p>
+
+			<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd&quot; version=&quot;3.1&quot;&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;ListServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.post.ListServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;ListServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.post.CreateServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/create&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;SaveServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.post.SaveServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;SaveServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/save&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;EditServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.post.EditServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;EditServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/edit&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;UpdateServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.post.UpdateServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;UpdateServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/update&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;DeleteServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.post.DeleteServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;DeleteServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/delete&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;SigninServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.SigninServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;SigninServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/signin&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;AuthServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.AuthServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;AuthServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/auth&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;LogoutServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.LogoutServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;LogoutServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/logout&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;filter&gt;
+        &lt;filter-name&gt;Parakeet&lt;/filter-name&gt;
+        &lt;filter-class&gt;io.github.mcroteau.resources.filters.CacheFilter&lt;/filter-class&gt;
+    &lt;/filter&gt;
+
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;Parakeet&lt;/filter-name&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;/filter-mapping&gt;
+
+    &lt;filter&gt;
+        &lt;filter-name&gt;sitemesh&lt;/filter-name&gt;
+        &lt;filter-class&gt;com.opensymphony.sitemesh.webapp.SiteMeshFilter&lt;/filter-class&gt;
+    &lt;/filter&gt;
+
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;sitemesh&lt;/filter-name&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;/filter-mapping&gt;
+
+    &lt;listener&gt;
+        &lt;listener-class&gt;
+            xyz.cafe.startup.AppStartup
+        &lt;/listener-class&gt;
+    &lt;/listener&gt;
+
+&lt;/web-app&gt;
+
+			</pre>
 
 			<p class="center space-it">&copy; OpenCafe</p>
 
