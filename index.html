@@ -467,125 +467,13 @@ Cafe/src/main/WEB-INF</pre>
             <img src="images/intellij-import.png" style="width:100%;"/>
 
 			<p>Now let's configure the project as a Web project by adding a
-			<strong>web.xml</strong>. It is a lengthy file in for this project, but we
-                will show you a trick in the future. Copy and paste the following:</p>
+			<strong>web.xml</strong>. Copy and paste the following:</p>
 			<pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
          xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
          xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee
                              http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd&quot; version=&quot;3.1&quot;&gt;
-
-    &lt;servlet&gt;
-        &lt;servlet-name&gt;ListServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;xyz.cafe.web.post.ListServlet&lt;/servlet-class&gt;
-    &lt;/servlet&gt;
-
-    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;ListServlet&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
-
-    &lt;servlet&gt;
-        &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;xyz.cafe.web.post.CreateServlet&lt;/servlet-class&gt;
-    &lt;/servlet&gt;
-
-    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/create&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
-
-    &lt;servlet&gt;
-        &lt;servlet-name&gt;SaveServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;xyz.cafe.web.post.SaveServlet&lt;/servlet-class&gt;
-    &lt;/servlet&gt;
-
-    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;SaveServlet&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/save&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
-
-    &lt;servlet&gt;
-        &lt;servlet-name&gt;EditServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;xyz.cafe.web.post.EditServlet&lt;/servlet-class&gt;
-    &lt;/servlet&gt;
-
-    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;EditServlet&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/edit&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
-
-    &lt;servlet&gt;
-        &lt;servlet-name&gt;UpdateServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;xyz.cafe.web.post.UpdateServlet&lt;/servlet-class&gt;
-    &lt;/servlet&gt;
-
-    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;UpdateServlet&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/update&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
-
-    &lt;servlet&gt;
-        &lt;servlet-name&gt;DeleteServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;xyz.cafe.web.post.DeleteServlet&lt;/servlet-class&gt;
-    &lt;/servlet&gt;
-
-    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;DeleteServlet&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/delete&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
-
-
-    &lt;servlet&gt;
-        &lt;servlet-name&gt;SigninServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;xyz.cafe.web.SigninServlet&lt;/servlet-class&gt;
-    &lt;/servlet&gt;
-
-    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;SigninServlet&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/signin&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
-
-    &lt;servlet&gt;
-        &lt;servlet-name&gt;AuthServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;xyz.cafe.web.AuthServlet&lt;/servlet-class&gt;
-    &lt;/servlet&gt;
-
-    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;AuthServlet&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/auth&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
-
-    &lt;servlet&gt;
-        &lt;servlet-name&gt;LogoutServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;xyz.cafe.web.LogoutServlet&lt;/servlet-class&gt;
-    &lt;/servlet&gt;
-
-    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;LogoutServlet&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/logout&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
-
-    &lt;filter&gt;
-        &lt;filter-name&gt;Parakeet&lt;/filter-name&gt;
-        &lt;filter-class&gt;io.github.mcroteau.resources.filters.CacheFilter&lt;/filter-class&gt;
-    &lt;/filter&gt;
-
-    &lt;filter-mapping&gt;
-        &lt;filter-name&gt;Parakeet&lt;/filter-name&gt;
-        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
-    &lt;/filter-mapping&gt;
-
-    &lt;filter&gt;
-        &lt;filter-name&gt;sitemesh&lt;/filter-name&gt;
-        &lt;filter-class&gt;com.opensymphony.sitemesh.webapp.SiteMeshFilter&lt;/filter-class&gt;
-    &lt;/filter&gt;
-
-    &lt;filter-mapping&gt;
-        &lt;filter-name&gt;sitemesh&lt;/filter-name&gt;
-        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
-    &lt;/filter-mapping&gt;
 
     &lt;listener&gt;
         &lt;listener-class&gt;
@@ -601,9 +489,10 @@ Cafe/src/main/WEB-INF</pre>
             <pre>src/main/webapp/WEB-INF/<strong>web.xml</strong></pre></p>
 
 
-            <p>Okay, so what have we done here?  We have configured our
-            project to look for what are called servlets and filters and
-                configured them within our project.</p>
+            <p>Okay, so what have we done here? We have configured our
+            project to look for what are called servlets, filters, listeners and
+                more. This <strong>web.xml</strong> is empty but we will
+                populate it with lots of stuff later on.</p>
 
             <p><strong>What is a Servlet?</strong> A servlet is a Java class that
                 represents a web route.
@@ -648,7 +537,58 @@ Cafe/src/main/WEB-INF</pre>
             <h3>Great! But...</h3>
 
             <p>We have no Servlets created and we haven't even
-                run our project yet! Okay, let's create one. Let's start with
+                run our project yet! Okay, let's create one and also while
+                we are at it create the Java class that will be waiting for the
+                project to start up. </p>
+
+            <p>Take another look at the <strong>web.xml</strong>. Track down
+            the following.</p>
+
+            <pre>
+&lt;listener&gt;
+    &lt;listener-class&gt;
+        xyz.cafe.startup.AppStartup
+    &lt;/listener-class&gt;
+&lt;/listener&gt;
+            </pre>
+
+            <p>Within your <strong>web.xml</strong> you can define what are called
+            application listeners. In this case we are defining a class that will
+            listen for the startup event... thus the name AppStartup. So let's
+            create that class.</p>
+
+            <pre>src/main/java/xyz/cafe/startup/<strong>AppStartup.java</strong></pre>
+
+            <p>Copy and paste the following into that file. We will be updating it
+            with more logic later on, but this will get us started.</p>
+
+            <pre>
+package xyz.cafe.startup;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+public class AppStartup implements ServletContextListener {
+
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        //application startup
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        //application shutdown
+    }
+
+}
+            </pre>
+
+            <p>Now let's try something... let's run our project and see what happens.
+            Just in case, this is what your project should look like at this point: </p>
+
+            <img src="images" style="width:100%"/>
+
+            <p>Let's start with
                 the CreateServlet so we can run our newly created project and
                 actually see something... geez.</p>
 
