@@ -474,6 +474,15 @@ Cafe/src/main/WEB-INF</pre>
          xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
          xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee
                              http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd&quot; version=&quot;3.1&quot;&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.post.CreateServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/create&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
 
     &lt;listener&gt;
         &lt;listener-class&gt;
@@ -491,7 +500,7 @@ Cafe/src/main/WEB-INF</pre>
 
             <p>Okay, so what have we done here? We have configured our
             project to look for what are called servlets, filters, listeners and
-                more. This <strong>web.xml</strong> is empty but we will
+                more. This <strong>web.xml</strong> is pretty much empty but we will
                 populate it with lots of stuff later on.</p>
 
             <p><strong>What is a Servlet?</strong> A servlet is a Java class that
@@ -499,7 +508,7 @@ Cafe/src/main/WEB-INF</pre>
             A request gets passed to this route that is defined as you saw above. Here is
             an example.. there are plenty above but let's pick one out and go into detail.</p>
 
-            <p>The standard for defining a Servlet</p>
+            <p>The standard for defining a Servlet, and we defined our first above:</p>
             <pre>
 &lt;servlet&gt;
     &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
@@ -714,6 +723,17 @@ req.getRequestDispatcher("/jsp/post/create.jsp").forward(req, resp);
             <strong>/create</strong></p>
 
             <pre>http://localhost:8080/cafe/create</pre>
+
+            <p>You should see something like the following:</p>
+
+            <img src="images/create-jsp.png" style="width:100%;"/>
+
+            <p>Now, we have our very first request pointing to our first servlet
+                located <strong>/create</strong>. But it look ugly, have no fear,
+            by the end of this tutorial, our blog application will be so slick and
+            pretty!</p>
+
+
 
             <p class="center space-it">&copy; OpenCafe</p>
 
