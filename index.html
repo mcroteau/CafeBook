@@ -468,9 +468,7 @@ Cafe/src/main/WEB-INF</pre>
 
 			<p>Now let's configure the project as a Web project by adding a
 			<strong>web.xml</strong>. It is a lengthy file in for this project, but we
-            will show you a trick in the future. Copy and paste the following into
-            <strong>Cafe/src/main/webapp/WEB-INF/web.xml</strong>.</p>
-
+                will show you a trick in the future. Copy and paste the following:</p>
 			<pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
@@ -596,33 +594,38 @@ Cafe/src/main/WEB-INF</pre>
     &lt;/listener&gt;
 
 &lt;/web-app&gt;
-
 			</pre>
+
+            <p>Copy and paste above into the file:</p>
+
+            <pre>src/main/webapp/WEB-INF/<strong>web.xml</strong></pre></p>
+
 
             <p>Okay, so what have we done here?  We have configured our
             project to look for what are called servlets and filters and
                 configured them within our project.</p>
 
-            <p><strong>What is a Servlet?</strong> A servlet is a route.
+            <p><strong>What is a Servlet?</strong> A servlet is a Java class that
+                represents a web route.
             A request gets passed to this route that is defined as you saw above. Here is
             an example.. there are plenty above but let's pick one out and go into detail.</p>
 
             <p>The standard for defining a Servlet</p>
             <pre>
-    &lt;servlet&gt;
-        &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
-        &lt;servlet-class&gt;xyz.cafe.web.post.CreateServlet&lt;/servlet-class&gt;
-    &lt;/servlet&gt;
+&lt;servlet&gt;
+    &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;xyz.cafe.web.post.CreateServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
 
-    &lt;servlet-mapping&gt;
-        &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
-        &lt;url-pattern&gt;/create&lt;/url-pattern&gt;
-    &lt;/servlet-mapping&gt;
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/create&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
             </pre>
 
             <p>So we defined here in our project a Servlet that we named
             <strong>CreateServlet</strong> it will be located in the folder
-            <strong>xyz/cafe/web/post</strong>. The request will get
+            <pre>src/main/java/xyz/cafe/web/post</pre> The request will get
                 passed to <strong>/create</strong> like below:</p>
 
             <pre>http://localhost:8080/cafe/<strong>create</strong></pre>
@@ -635,7 +638,7 @@ Cafe/src/main/WEB-INF</pre>
 
             <ul>
                 <li><strong>ListServlet</strong> : which will list the blog posts</li>
-                <li><strong>CreateServlet</strong> : displays a create blog post screen</li>
+                <li><strong>CreateServlet</strong> : displays a create blog post</li>
                 <li><strong>SaveServlet</strong> : saves a post</li>
                 <li><strong>UpdateServlet</strong> : allows us to update a post</li>
                 <li><strong>EditServlet</strong> : allowing us to edit our post</li>
@@ -649,18 +652,20 @@ Cafe/src/main/WEB-INF</pre>
                 the CreateServlet so we can run our newly created project and
                 actually see something... geez.</p>
 
-            <p>Back to your IDE, in the directory
-                <strong>Cafe/src/main/java/xyz/cafe/post/</strong> create a Java
+            <p>Back to your IDE, in the directory</p>
+                <pre>src/main/java/xyz/cafe/post/</pre>
+
+            <p>create a Java
                 class by right clicking on the <strong>post</strong> directory
             and selecting <strong>New -> Java Class</strong>. Or just create a new
             file and name it <strong>CreateServlet.java</strong></p>
 
-            <pre>/src/main/java/xyz/cafe/post/CreateServlet.java</pre>
+            <pre>/src/main/java/xyz/cafe/post/<strong>CreateServlet.java</strong></pre>
 
             <p>Copy and the code below into your new Java class.</p>
 
             <pre>
-package xyz.ioc.web.post;
+package xyz.cafe.web.post;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
