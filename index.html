@@ -631,13 +631,91 @@ public class CreateServlet extends HttpServlet {
 
             <p>Here we override <strong>doGet()</strong></p>
 
-            <p>Here is the</p>
+            <p>There is another important piece, notice the forward at the end,
+                without the <strong>.forward(req, resp)</strong> you will see a
+            blank screen.</p>
             <pre>
 req.getRequestDispatcher("/jsp/post/create.jsp").forward(req, resp);
             </pre>
 
+            <p>So we have out first servlet, and it overrides a
+            <strong>doGet()</strong> verb which means nothing is hidden,
+            you can simply type in the servlet path, hit enter and browse to the
+            servlet. We don't have a <strong>create.jsp</strong> yet.
+            Let's create that. Create the <strong>create.jsp</strong> at:</p>
 
-			<p class="center space-it">&copy; OpenCafe</p>
+            <pre>src/main/webapp/jsp/post/<strong>create.jsp</strong></pre>
+
+            <p>Copy and past the following code within the <strong>create.jsp</strong>.</p>
+
+
+            <pre>
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;%@ taglib prefix=&quot;c&quot; uri=&quot;http://java.sun.com/jsp/jstl/core&quot; %&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Cafe : Create Post&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Create Post&lt;/h1&gt;
+
+&lt;c:if test=&quot;${not empty message}&quot;&gt;
+    &lt;p&gt;&lt;c:out value=&quot;${message}&quot;/&gt;&lt;/p&gt;
+&lt;/c:if&gt;
+
+&lt;form action=&quot;${pageContext.request.contextPath}/save&quot; method=&quot;post&quot;&gt;
+
+    &lt;label&gt;Title&lt;/label&gt;
+    &lt;input type=&quot;text&quot; name=&quot;title&quot; placeholder=&quot;title&quot;/&gt;
+
+    &lt;br/&gt;
+
+    &lt;label&gt;Content&lt;/label&gt;
+    &lt;textarea name=&quot;content&quot;&gt;&lt;/textarea&gt;
+
+    &lt;br/&gt;
+    &lt;br/&gt;
+
+    &lt;input type=&quot;submit&quot; value=&quot;Save&quot;/&gt;
+&lt;/form&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+
+
+            <strong>What is a Jsp?</strong> Jsp stands for Java Server Page.
+            It is the view in our Model, View, Controller setup.</p>
+
+            <p>Okay! We now have the basics for a Java web app. Let's run it!</p>
+
+            <p>Back to the terminal or command prompt. Make sure you're in the main
+            <strong>Cafe</strong> directory. Type:</p>
+
+            <pre>mvn jetty:run</pre>
+
+            <p>You will see a bunch of output, this is logging. We won't go into that
+            but if you want to learn more about logging checkout <strong>slf4j</strong></p>
+
+            <p>So what did we do? We told Maven to compile the project and told
+            <strong>Jetty</strong> to run it. Now open up a web browser and go to:</p>
+
+            <pre>http://localhost:8080/cafe</pre>
+
+            <p>You should see the following.</p>
+
+            <img src="images/app-base.png" style="width:100%"/>
+
+            <p>This is our start. We might not like this as our start obviously because
+            this shows the basic standard packages but its not really what we are looking for
+            with our blog application. We will change this soon. Go ahead now and lets
+            browse to our first servlet, the <strong>CreateServlet</strong> at
+            <strong>/create</strong></p>
+
+            <pre>http://localhost:8080/cafe/create</pre>
+
+            <p class="center space-it">&copy; OpenCafe</p>
 
 
 		</div>
