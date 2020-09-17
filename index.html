@@ -9,7 +9,7 @@
 	<meta name=”viewport” content=”width=device-width, initial-scale=1″>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	
-	<link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&display=swap" rel="stylesheet">
+<!--	<link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&display=swap" rel="stylesheet">-->
 
 	<link href="images/" rel="icon" type="image/png" />
 
@@ -24,6 +24,7 @@
 			color:#333333;
 			color:#19191B;
 			font-family:'Roboto';
+            font-family: 'Arial'
 		}
 		h1{
 			font-weight:900;
@@ -208,24 +209,12 @@
 
 	<a href="https://www.amazon.com/dp/0359620736" id="buy-the-book">Buy the Book!</a>
 
-
-
 	<div id="content" class="container">
 
 		<div class="col-md-2">&nbsp;</div>
 
 
 		<div class="col-md-7">
-
-			<div id="zeus-actions-wrapper" data-uri="www.opencafe.xyz" style="position:absolute; top:40px; right:0px; line-height:1.0em !important">
-			    <div id="zeus-inner-wrapper">
-			        <a href="javascript:" id="launch-zeus"><img src="http://www.zeus.social/b/images/zeus-launcher.png"/></a>
-			        <span id="zeus-likes" style="font-weight:normal"><span id="likes-span"></span> likes</span>
-			        <span id="zeus-shares" style="top:20px !important; font-weight: normal;"><span id="shares-span"></span> shares</span>
-			        <span id="zeus" style="font-weight:normal;">Zeus</span>
-			    </div>
-			</div>
-			<script type="text/javascript" src="http://www.zeus.social/b/js/Resource.js"></script>
 
 			<h1 id="title">Cafe</h1>
 
@@ -351,10 +340,30 @@ Cafe/src/main/WEB-INF</pre>
 				the <strong>model</strong> folder for our models, and our
 				<strong>jsp</strong> folder for our views.</p>
 
-			<h3>Now for the fun stuff...</h3>
 
-			<p>Create a file within the root Cafe directory,
-				name it <strong>pom.xml</strong>. The pom.xml will
+            <h3>Do you have an IDE already?</h3>
+
+            <p><strong>What is an IDE?</strong> An IDE is an Integrated
+                Development Environment, basically a tool to use in order to develop.
+                Often times developers will use plain text editors, this will work fine
+                but you will not have package or directory management, code assist and a lot
+                fun features that a full fledged IDE has. We recommend either Eclipse or
+                during this tutorial, I am using IntelliJ.
+                <a href="https://www.jetbrains.com/idea/download/">https://www.jetbrains.com/idea/</a>
+                They have a community addition, which is Free.
+            </p>
+
+            <a href="https://www.jetbrains.com/idea/download/"><img src="images/intellij-web.png" style="width:100%"/>
+            </a>
+
+            <p>Hold off before importing the project until you've
+                created what is called <strong>pom.xml</strong>. The reason we
+            are holding off until importing into our new IDE is because the IDE
+            will configure the project within using the <strong>pom.xml</strong></p>
+
+			<p>Use a simple text editor for this and
+                create a file within the <strong>root Cafe</strong> directory,
+                name it <strong>pom.xml</strong>. The <strong>pom.xml</strong> will
 			be our main project configuration file. We will list our project
 			dependencies within it. We will also configure a build &amp; run plugin
 			to test our project.</p>
@@ -443,16 +452,24 @@ Cafe/src/main/WEB-INF</pre>
 &lt;/project&gt;
 </pre>
 
-
 			<p>What we've done above is configured and told Maven
-				to look for all the dependencies within the <strong>dependencies</strong>
+				to look for all the dependencies within the <strong>&lt;dependencies/&gt;</strong>
 				element, where to look for our Java source files, what version of Java
 				to compile under and configured the project to use <strong>Jetty</strong>
 				to run it in development mode.</p>
 
+            <p>Now lets import the project into our IDE. In this example we will use
+            IntelliJ. Open IntelliJ and click <strong>Open or Import</strong>. Locate
+            the <strong>pom.xml</strong> and double click the file. This will bring up
+            prompt asking whether or not you want to <strong>Open as Project</strong>. Click
+            <strong>Open as Project</strong>. IntelliJ will import the project for you. </p>
+
+            <img src="images/intellij-import.png" style="width:100%;"/>
 
 			<p>Now let's configure the project as a Web project by adding a
-			<strong>web.xml</strong>. </p>
+			<strong>web.xml</strong>. It is a lengthy file in for this project, but we
+            will show you a trick in the future. Copy and paste the following into
+            <strong>Cafe/src/main/webapp/WEB-INF/web.xml</strong>.</p>
 
 			<pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
@@ -581,6 +598,85 @@ Cafe/src/main/WEB-INF</pre>
 &lt;/web-app&gt;
 
 			</pre>
+
+            <p>Okay, so what have we done here?  We have configured our
+            project to look for what are called servlets and filters and
+                configured them within our project.</p>
+
+            <p><strong>What is a Servlet?</strong> A servlet is a route.
+            A request gets passed to this route that is defined as you saw above. Here is
+            an example.. there are plenty above but let's pick one out and go into detail.</p>
+
+            <p>The standard for defining a Servlet</p>
+            <pre>
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.post.CreateServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/create&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+            </pre>
+
+            <p>So we defined here in our project a Servlet that we named
+            <strong>CreateServlet</strong> it will be located in the folder
+            <strong>xyz/cafe/web/post</strong>. The request will get
+                passed to <strong>/create</strong> like below:</p>
+
+            <pre>http://localhost:8080/cafe/<strong>create</strong></pre>
+
+            <p><strong>What is a request?</strong> A request is a web request.
+            Anytime you type in a browser bar and hit enter, that is called
+            a <strong>Request</strong>.</p>
+
+            <p>We defined for the blog post the following:</p>
+
+            <ul>
+                <li><strong>ListServlet</strong> : which will list the blog posts</li>
+                <li><strong>CreateServlet</strong> : displays a create blog post screen</li>
+                <li><strong>SaveServlet</strong> : saves a post</li>
+                <li><strong>UpdateServlet</strong> : allows us to update a post</li>
+                <li><strong>EditServlet</strong> : allowing us to edit our post</li>
+                <li><strong>DeleteServlet</strong> : to delete a post</li>
+            </ul>
+
+            <h3>Great! But...</h3>
+
+            <p>We have no Servlets created and we haven't even
+                run our project yet! Okay, let's create one. Let's start with
+                the CreateServlet so we can run our newly created project and
+                actually see something... geez.</p>
+
+            <p>Back to your IDE, in the directory
+                <strong>Cafe/src/main/java/xyz/cafe/post/</strong> create a Java
+                class by right clicking on the <strong>post</strong> directory
+            and selecting <strong>New -> Java Class</strong>. Or just create a new
+            file and name it <strong>CreateServlet.java</strong></p>
+
+            <pre>/src/main/java/xyz/cafe/post/CreateServlet.java</pre>
+
+            <p>Copy and the code below into your new Java class.</p>
+
+            <pre>
+package xyz.ioc.web.post;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+public class CreateServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/jsp/post/create.jsp").forward(req, resp);
+    }
+}
+            </pre>
+
 
 			<p class="center space-it">&copy; OpenCafe</p>
 
