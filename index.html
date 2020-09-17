@@ -586,7 +586,7 @@ public class AppStartup implements ServletContextListener {
             <p>Now let's try something... let's run our project and see what happens.
             Just in case, this is what your project should look like at this point: </p>
 
-            <img src="images" style="width:100%"/>
+            <img src="images/project-start.png" style="width:100%"/>
 
             <p>Let's start with
                 the CreateServlet so we can run our newly created project and
@@ -620,6 +620,20 @@ public class CreateServlet extends HttpServlet {
         req.getRequestDispatcher("/jsp/post/create.jsp").forward(req, resp);
     }
 }
+            </pre>
+
+
+            <p>Notice the CreateServlet extends HttpServlet... this means that all the methods
+            that are within <strong>HttpServlet</strong> are overrideable. There are three
+            very important methods that you will at some point in time override if writing
+            a J2ee application. <strong>doGet()</strong> <strong>doPost()</strong>
+            and <strong>init()</strong></p>
+
+            <p>Here we override <strong>doGet()</strong></p>
+
+            <p>Here is the</p>
+            <pre>
+req.getRequestDispatcher("/jsp/post/create.jsp").forward(req, resp);
             </pre>
 
 
