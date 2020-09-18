@@ -221,6 +221,10 @@
 			<h2 id="subtitle">A Simple J2ee Project</h2>
 			<h3 id="subtitle-dos">Java Web Application Sample</h3>
 
+            <p>Project source can always be found at:
+                <a href="https://github.com/mcroteau/Cafe">https://github.com/mcroteau/Cafe</a></p>
+
+
 			<p>This will walk you through step by step and we will create
 				a simple blog application running locally on your development
 				machine running <strong> h2</strong> and <strong>Jetty</strong>.
@@ -981,6 +985,48 @@ public class AppStartup implements ServletContextListener {
 
             <p>We will be coming back to this class one more time to fill it up
                 with some neat stuff!</p>
+
+            <p>Let's test our project again, now before we run our maven
+                command to start the project, we need to start h2. Let's do
+            that. Run the following command while in the Cafe directory.</p>
+
+            <pre>java -jar exec/h2-1.4.200.jar</pre>
+
+            <p>You should see a Java icon the bottom of your screen and
+            a browser window should popup and show you the connection screen
+            for h2. </p>
+
+            <img src="images/h2-connect.png" style="width:100%"/>
+
+            <p>You will need to change the <strong>JDBC URL</strong> to match the
+                location of the Constants URL. The location for my h2 instance
+                again will be at:</p>
+
+            <pre>~/Development/Projects/Cafe/exec/cafe</pre>
+
+            <p>So the full JDBC URL in the browser connection screen
+                should read :</p>
+
+            <pre>jdbc:h2:~/Development/Projects/Cafe/exec/cafe</pre>
+
+            <p><strong>Now click Connect!</strong></p>
+
+            <p>You should see a screen that looks like the following:</p>
+
+            <img src="images/h2-connected.png" style="width:100%"/>
+
+            <p>Wait, we have no tables! Here we could manually create our
+            tables using the <strong>create-db.sql</strong> script we created
+            earlier, but instead we are going to rely on the tools available
+            within h2 to do this for us on startup.</p>
+
+            <p>Let's run our project! Open up another terminal window, now you
+            should have 2 terminal windows open, both opened up within the main
+            Cafe directory. Run:</p>
+
+            <pre>mvn jetty:run</pre>
+
+
 
 
             <p class="center space-it">&copy; OpenCafe</p>
