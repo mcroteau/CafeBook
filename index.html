@@ -729,17 +729,258 @@ req.getRequestDispatcher("/jsp/post/create.jsp").forward(req, resp);
             <img src="images/create-jsp.png" style="width:100%;"/>
 
             <p>Now, we have our very first request pointing to our first servlet
-                located <strong>/create</strong>. But it look ugly, have no fear,
-            by the end of this tutorial, our blog application will be so slick and
-            pretty!</p>
+                located <strong>/create</strong>. But it looks ugly, have no fear,
+            by the end of this tutorial, our blog application will be so slick!</p>
 
-            <p>So we can view a create page, so what... we need to be able to
+            <p>So we can view a create blog post page, so what... we need to be able to
             <strong>save, edit, update and delete</strong> our blog posts. Before
             we do that, let's think about security and data.</p>
 
             <p>First off, not everyone should be able to create a blog post! Second,
                 where and how are we going to store the blog post data?
                 What does a blog post look like? Etc.</p>
+
+            <p>Let's start with data, introducing <strong>h2</strong>.
+            <strong>h2</strong> is an in memory data store. This will work perfect
+            while we are developing. You might have noticed it already, but we have
+            the dependency already defined in our <strong>pom.xml</strong>. </p>
+
+            <pre>
+&lt;dependency&gt;
+    &lt;groupId&gt;com.h2database&lt;/groupId&gt;
+    &lt;artifactId&gt;h2&lt;/artifactId&gt;
+    &lt;version&gt;1.4.200&lt;/version&gt;
+&lt;/dependency&gt;
+            </pre>
+
+            <p>So the library is there but we need to run it. Lets create
+                a new top level directory under:</p>
+
+            <pre>Cafe/exec/</pre>
+
+
+            <p>When maven fetches dependencies, it stores them under a directory
+            located in your home directory called <strong>.m2/</strong>. Copy the
+                <strong>h2-1.4.200.jar</strong> into the new <strong>exec/</strong>
+            directory.</p>
+
+            <pre>cp ~/.m2/repository/com/h2database/h2/1.4.200/h2-1.4.200.jar exec/</pre>
+
+            <p>We now have our <strong>h2-1.4.200</strong> jar. We are going to hold off
+            running it until we have our tables setup. We also can configure h2
+            to execute startup and shutdown sql scripts which is what we are going to do.</p>
+
+            <p>Let's define our tables</p>
+
+            <p>Our tables will include <strong>accounts, posts, roles, account_roles
+                &amp; account_permissions</strong> for our application.
+                So let's create a file called <strong>create-db.sql</strong>
+                under the new <strong>exec/</strong> directory.</p>
+
+            <pre>Cafe/exec/<strong>create-db.sql</strong></pre>
+
+            <p>Paste the following into our new file.</p>
+
+            <pre>
+create table accounts (
+	id bigint PRIMARY KEY AUTO_INCREMENT,
+	name character varying(55),
+	username character varying(55) NOT NULL,
+	password character varying(155) NOT NULL
+);
+
+create table roles (
+	id bigint PRIMARY KEY AUTO_INCREMENT,
+	name character varying(55) NOT NULL UNIQUE
+);
+
+create table user_roles (
+	role_id bigint NOT NULL REFERENCES roles(id),
+	account_id bigint NOT NULL REFERENCES accounts(id)
+);
+
+create table user_permissions (
+	account_id bigint REFERENCES accounts(id),
+	permission character varying(55)
+);
+
+create table posts (
+	id bigint PRIMARY KEY AUTO_INCREMENT,
+	account_id bigint NOT NULL REFERENCES accounts(id),
+	title character varying(172),
+	content text,
+	date_created bigint NOT NULL
+);
+
+insert into accounts values (1, 'owner', 'owner@mail.co', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
+insert into accounts values (2, 'barista', 'barista@mail.co', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
+
+insert into roles values (1, 'ROLE_OWNER');
+insert into roles values (2, 'ROLE_BARISTA');
+
+insert into user_roles values (1, 1);
+insert into user_roles values (2, 2);
+            </pre>
+
+            <p>What we have done here is defined our tables for our database and
+            inserted some base user authorization information. There are 2 roles,
+            one for the owners and the other for baristas. Both should be able to
+            create blog posts, only the person who created the post or the owner
+            should be able to edit a post and finally only the owner should be able
+            to delete a post. Most of this logic for this will reside in our code.</p>
+
+            <p>The <strong>create-db.sql</strong> should get executed on startup,
+            so let's do that.</p>
+
+            <p>Now we need a script file for our shutdown operations. This script
+            will simply drop all the tables so that when we restart our application we
+            don't have to manually stop <strong>h2</strong> and delete our database
+                on restart.</p>
+
+            <p>Let's create the script to drop the tables on shutdown. Create:</p>
+
+            <pre>exec/<strong>drop-db.sql</strong></pre>
+
+            <p>Past the following into that sql script file.</p>
+
+            <pre>
+drop table posts;
+drop table user_roles;
+drop table user_permissions;
+drop table accounts;
+drop table roles;
+            </pre>
+
+            <p>In order to run the scripts on our startup and shutdown routines,
+                we need to be able to connect to the database. So let's create our connection.</p>
+
+            <p>First let's create a constants file to hold all of our global constant
+            variables including those for our db connection.
+                Create a Constants.java Java class in:</p>
+
+            <pre>src/main/java/xyz/cafe/common/<strong>Constants.java</strong></pre>
+
+            <p>Paste the following code into the <strong>Constants.java</strong> class</p>
+
+            <pre>
+package xyz.cafe.common;
+
+public class Constants {
+
+    public static final String USER = "sa";
+    public static final String PASS = "";
+
+    public static final String URL  = "jdbc:h2:tcp://localhost:9092/" +
+            "~/Development/Projects/Cafe/exec/cafe";
+
+    public static final String PARAKEET_LOOKUP  = "Parakeet";
+    public static final String USER_DAO_LOOKUP  = "UserDao";
+    public static final String POSTS_DAO_LOOKUP = "PostsDao";
+    public static final String DATE_FORMAT  = "yyyyMMddHHmmssSSS";
+
+    public static final String ROLE_OWNER  = "ROLE_OWNER";
+    public static final String POST_PREFIX = "post:maintenance:";
+
+}
+            </pre>
+
+            <p>One major constant that needs to be reviewed is the
+                <strong>URL</strong>. My Cafe project is located at:</p>
+
+            <pre>~/Development/projects/Cafe/</pre>
+
+            <p>You will have to change this to match where your project
+                is located. If it is on your  desktop, then URL would probably
+                look like:</p>
+
+            <pre>
+jdbc:h2:tcp://localhost:9092/~/Desktop/Cafe/exec/cafe;
+</pre>
+            <p>This will be the url of our database connection.
+                <strong>h2</strong> will create an in memory database
+                in that location.</p>
+
+            <p>Now we need to create a DbConnection.java Java class located at:</p>
+
+            <pre>src/main/java/xyz/cafe/common/<strong>DbConnection.java</strong></pre>
+
+            <p>Paste the following code within it:</p>
+
+            <pre>
+package xyz.cafe.factory;
+
+import xyz.cafe.common.Constants;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DbFactory {
+
+    public static Connection getConnection() {
+        try {
+            Class.forName("org.h2.Driver");
+            return DriverManager.getConnection(Constants.URL, Constants.USER, Constants.PASS);
+        } catch (SQLException | ClassNotFoundException ex) {
+            throw new RuntimeException("Error connecting to the database", ex);
+        }
+    }
+
+}
+            </pre>
+
+
+            <p>This class will return a h2 database connection.</p>
+
+            <p>Now, back to the <strong>AppStartup</strong> Java class.</p>
+
+            <pre>src/main/java/xyz/cafe/startup/<strong>AppStartup.java</strong></pre>
+
+            <p>Edit it so it looks like this:</p>
+
+            <pre>
+package xyz.cafe.startup;
+
+import org.h2.tools.RunScript;
+import xyz.cafe.factory.DbFactory;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import java.io.FileReader;
+import java.sql.Connection;
+
+public class AppStartup implements ServletContextListener {
+
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        try {
+
+            System.out.println("Starting up!");
+            Connection conn = DbFactory.getConnection();
+            RunScript.execute(conn, new FileReader("exec/create-db.sql"));
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        try {
+
+            Connection conn = DbFactory.getConnection();
+            RunScript.execute(conn, new FileReader("exec/drop-db.sql"));
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+}
+            </pre>
+
+            <p>We will be coming back to this class one more time to fill it up
+                with some neat stuff!</p>
 
 
             <p class="center space-it">&copy; OpenCafe</p>
