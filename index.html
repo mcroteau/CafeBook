@@ -1068,7 +1068,7 @@ package xyz.cafe.factory;
 
 import io.github.mcroteau.Parakeet;
 import io.github.mcroteau.resources.access.Accessor;
-import xyz.ioc.access.JdbcAccessor;
+import xyz.cafe.access.JdbcAccessor;
 
 public class ParakeetFactory {
 
@@ -1219,6 +1219,416 @@ public class Post {
     }
 
 }
+            </pre>
+
+            <p>Now we have models for our application. Every time you
+            want to store something into a database using this structure
+            you will want a complimentary model and dao. So we are going to
+            compliment our models by creating two data access objects.
+            One for users and the other for blog posts. The data access
+            object will perform our save, update and delete routines and
+            in addition perform any other kind of data retrieval.</p>
+
+            <p>Let's create a <strong>UserDao.java</strong> and a
+            <strong>PostDao.java</strong> like below:</p>
+
+            <pre>src/main/java/xyz/cafe/dao/<strong>UserDao.java</strong></pre>
+
+            <pre>src/main/java/xyz/cafe/dao/<strong>PostDao.java</strong></pre>
+
+            <p>Copy &amp; paste the following into our <strong>UserDao.java</strong>
+            class.</p>
+
+            <pre>
+package xyz.cafe.dao;
+
+import xyz.cafe.factory.DbFactory;
+import xyz.cafe.model.User;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
+
+public class UserDao {
+
+    Connection connection;
+
+    public UserDao(){
+        connection = DbFactory.getConnection();
+    }
+
+    public User getUser(String username){
+        try {
+            Statement stmt = connection.createStatement();
+            String sql = &quot;select * from accounts where username = '&quot; + username + &quot;'&quot;;
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                User user = new User();
+                user.setId(rs.getLong(&quot;id&quot;));
+                user.setName(rs.getString(&quot;name&quot;));
+                user.setUsername(rs.getString(&quot;username&quot;));
+                user.setPassword(rs.getString(&quot;password&quot;));
+                return user;
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public String getPassword(String username){
+        try {
+            Statement stmt = connection.createStatement();
+            String sql = &quot;select password from accounts where username = '&quot; + username + &quot;'&quot;;
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getString(&quot;password&quot;);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return &quot;&quot;;
+    }
+
+    public Set&lt;String&gt; getUserRoles(String username){
+        try {
+            User user = getUser(username);
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(&quot;select r.name from user_roles ur, roles r where ur.role_id = r.id and ur.account_id = &quot; + user.getId());
+
+            Set&lt;String&gt; roles = new HashSet&lt;String&gt;();
+            while(rs.next()){
+                String role = rs.getString(&quot;name&quot;);
+                roles.add(role);
+            }
+            return roles;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Set&lt;String&gt; getUserPermissions(String username){
+        try {
+            User user = getUser(username);
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(&quot;select permission from user_permissions where account_id = &quot; + user.getId());
+            Set&lt;String&gt; permissions = new HashSet&lt;String&gt;();
+            while(rs.next()){
+                String permission = rs.getString(&quot;permission&quot;);
+                permissions.add(permission);
+            }
+            return permissions;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean saveUserPermission(String permission, long id){
+        try {
+            String sql = &quot;insert into user_permissions values ( ?, ? );&quot;;
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setLong(1, id);
+            stmt.setString(2, permission);
+
+            int result = stmt.executeUpdate();
+            if (result == 1) return true;
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+}
+
+            </pre>
+
+            <p>UserDao is down. We have methods for getting a user from the
+                database, getting the password for Parakeet, retrieving user roles
+                and permissions and saving a permission. Okay, what's next?
+                Now let's do the same for our <strong>PostDao.java</strong>
+            Copy &amp; paste the following into <strong>PostDao</strong>. </p>
+
+            <pre>
+package xyz.cafe.dao;
+
+import xyz.cafe.factory.DbFactory;
+import xyz.cafe.model.Post;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PostDao {
+    Connection connection;
+
+    public PostDao(){
+        connection = DbFactory.getConnection();
+    }
+
+    public Post getById(long id) {
+        try {
+            String sql = &quot;select * from posts where id = &quot; + id;
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            if(rs.next()){
+                Post post = extractResultSetPost(rs);
+                return post;
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public Post getLast(){
+        try {
+            String sql = &quot;select * from posts order by date_created desc limit 1 &quot;;
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            if(rs.next()){
+                Post post = extractResultSetPost(rs);
+                return post;
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public Post save(Post post){
+        try {
+            String sql = &quot;insert into posts values ( null, ?, ?, ?, ? );&quot;;
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setLong(1, post.getUserId());
+            stmt.setString(2, post.getTitle());
+            stmt.setString(3, post.getContent());
+            stmt.setLong(4, post.getDateCreated());
+
+            int result = stmt.executeUpdate();
+            if(result == 1) {
+                Post savedPost = getLast();
+                return savedPost;
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public boolean update(Post post){
+        try {
+            String sql = &quot;update posts set title = ?, content = ? where id = &quot; + post.getId();
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, post.getTitle());
+            stmt.setString(2, post.getContent());
+
+            int result = stmt.executeUpdate();
+            if(result == 1) {
+                return true;
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    public boolean delete(long id){
+        try {
+            String sql = &quot;delete from posts where id = &quot; + id;
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            int result = stmt.executeUpdate();
+
+            if(result == 1) {
+                return true;
+            }
+
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public List&lt;Post&gt; getList(){
+        try {
+            Statement stmt = connection.createStatement();
+            String sql = &quot;select * from posts&quot;;
+            ResultSet rs = stmt.executeQuery(sql);
+
+            List&lt;Post&gt; posts = new ArrayList&lt;Post&gt;();
+            while(rs.next()){
+                Post post = extractResultSetPost(rs);
+                posts.add(post);
+            }
+
+            return posts;
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Post extractResultSetPost(ResultSet rs) throws Exception{
+        Post post = new Post();
+        post.setId(rs.getLong(&quot;id&quot;));
+        post.setTitle(rs.getString(&quot;title&quot;));
+        post.setContent(rs.getString(&quot;content&quot;));
+        post.setDateCreated(rs.getLong(&quot;date_created&quot;));
+        return post;
+    }
+
+}
+            </pre>
+
+            <h3>Now we are talking!</h3>
+
+            <p>We have created a beautiful Java class to interact with <strong>h2</strong>
+            or any other data source we configure in the future. This class will save posts,
+            update posts... etc. We are now well on our way. Let's create that pesky
+            JdbcAccessor for Parakeet our security module. </p>
+
+            <p>Create a file located at:</p>
+
+            <pre>src/main/java/xyz/cafe/access/<strong>JdbcAccessor.java</strong></pre>
+
+            <p>Copy &amp; paste the following code within that class.</p>
+
+            <pre>
+package xyz.cafe.access;
+
+import io.github.mcroteau.resources.access.Accessor;
+import xyz.cafe.dao.UserDao;
+
+import java.util.Set;
+
+public class JdbcAccessor implements Accessor {
+
+    UserDao userDao;
+
+    public JdbcAccessor(){
+        this.userDao = new UserDao();
+    }
+
+    @Override
+    public String getPassword(String username) {
+        return userDao.getPassword(username);
+    }
+
+    @Override
+    public Set&lt;String&gt; getRoles(String username) {
+        return userDao.getUserRoles(username);
+    }
+
+    @Override
+    public Set&lt;String&gt; getPermissions(String username) {
+        return userDao.getUserPermissions(username);
+    }
+
+}
+            </pre>
+
+
+            <p>Our pain in the neck error in our ParakeetFactory class should
+            now be gone. We have officially installed the plumbing if you will for
+            our application. But are not done. How are we going to make Parakeet
+                and our Daos available through a request cycle? By using the
+            ServletContext which is available to us at startup. Let's update
+            our <strong>AppStartup.java</strong> class to look like :</p>
+
+            <pre>
+package xyz.cafe.startup;
+
+import io.github.mcroteau.Parakeet;
+import org.h2.tools.RunScript;
+import xyz.cafe.common.Constants;
+import xyz.cafe.dao.PostDao;
+import xyz.cafe.dao.UserDao;
+import xyz.cafe.factory.DbFactory;
+import xyz.cafe.factory.ParakeetFactory;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import java.io.FileReader;
+import java.sql.Connection;
+
+public class AppStartup implements ServletContextListener {
+
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        try {
+
+            System.out.println(&quot;Starting up!&quot;);
+            PostDao postDao = new PostDao();
+            UserDao userDao = new UserDao();
+
+            ParakeetFactory parakeetFactory = new ParakeetFactory();
+            Parakeet parakeet = parakeetFactory.getParakeet();
+
+            Connection conn = DbFactory.getConnection();
+            ServletContext context = sce.getServletContext();
+            context.setAttribute(Constants.PARAKEET_LOOKUP, parakeet);
+            context.setAttribute(Constants.POSTS_DAO_LOOKUP, postDao);
+            context.setAttribute(Constants.USER_DAO_LOOKUP, userDao);
+
+            RunScript.execute(conn, new FileReader(&quot;exec/create-db.sql&quot;));
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        try {
+            System.out.println(&quot;Shutting down!&quot;);
+            Connection conn = DbFactory.getConnection();
+            RunScript.execute(conn, new FileReader(&quot;exec/drop-db.sql&quot;));
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+}
+            </pre>
+
+            <p>What we have done here is told our application to store our
+            <strong>UserDao, PostDao and Parakeet</strong> so we can use them
+            later on instead of quote unquote newing them up during a request or
+            within the constructors of our application. I'll show you what I mean. </p>
+
+            <p>Let's create a new servlet! One for Saving our blog posts. Create a new
+                <strong>SaveServlet.java</strong> Java class located at:</p>
+
+            <pre>src/main/java/xyz/cafe/web/<strong>SaveServlet.java</strong></pre>
+
+            <p>This class will simply take a request and save the blog post
+            data. Copy &amp; paste the following code into this class:</p>
+
+            <pre>
+
             </pre>
 
             <p class="center space-it">&copy; OpenCafe</p>
