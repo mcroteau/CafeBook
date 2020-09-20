@@ -906,7 +906,7 @@ jdbc:h2:tcp://localhost:9092/~/Desktop/Cafe/exec/cafe;
 
             <p>Now we need to create a DbConnection.java Java class located at:</p>
 
-            <pre>src/main/java/xyz/cafe/common/<strong>DbConnection.java</strong></pre>
+            <pre>src/main/java/xyz/cafe/factory/<strong>DbConnection.java</strong></pre>
 
             <p>Paste the following code within it:</p>
 
@@ -1026,8 +1026,200 @@ public class AppStartup implements ServletContextListener {
 
             <pre>mvn jetty:run</pre>
 
+            <h3>Congratulations again! Yep Again!</h3>
+
+            <p>A milestone has been reached. Go back to the browser window with
+            the h2 database connection and click the refresh button in the top
+            left.</p>
+
+            <img src="images/h2-refresh.png"/>
+
+            <p>You should now see all of our database tables created!</p>
+
+            <img src="images/h2-startup.png" style="width:100%"/>
+
+            <p>Great! We are well on our way. What we have done is developed a
+            routine that will allow us to stop and start the application as needed
+            without having to mess with <strong>h2</strong> again. If for some
+            reason your database gets out of sync, simply delete the file
+            named <strong>cafe.mv.db</strong> located at:</p>
+
+            <pre>exec/<strong>cafe.mv.db</strong></pre>
+
+            <p>and restart the application.</p>
+
+            <p>Okay, now let's talk about security a little. In this tutorial
+            we will be using <strong>Parakeet</strong> to secure our requests.
+            If you take a look at the <strong>pom.xml</strong> you'll see we have
+            already defined our Parakeet dependency. Now let's use it. First we need
+            to make Parakeet available through out the application so we will create
+            a factory class for this. In addition we will be updating our startup
+            routine to include storing of Parakeet so during a request we can gain access
+            to the same instance.</p>
+
+            <p>The <strong>ParakeetFactory.java</strong> will be put at:</p>
+
+            <pre>src/main/java/xyz/cafe/factory/<strong>ParakeetFactory.java</strong></pre>
+
+            <p>Copy &amp; paste the following code in the new Java class.</p>
+
+            <pre>
+package xyz.cafe.factory;
+
+import io.github.mcroteau.Parakeet;
+import io.github.mcroteau.resources.access.Accessor;
+import xyz.ioc.access.JdbcAccessor;
+
+public class ParakeetFactory {
+
+    Parakeet parakeet;
+    Accessor accessor;
+
+    public ParakeetFactory(){
+        accessor = new JdbcAccessor();
+        parakeet = new Parakeet(accessor);
+    }
+
+    public Parakeet getParakeet(){
+        return this.parakeet;
+    }
+
+}
+            </pre>
+
+            <p>This is a simple class with one method that will return our
+            <strong>parakeet</strong> instance. We use the constructor to create
+            our Parakeet instance instantiating an accessor which will return
+            data to Parakeet as needed. You should see compilation errors in
+            <strong>ParakeetFactory</strong> above on the JdbcAccessor.</p>
+
+            <p>We are going to solve this error by first creating our models to
+                hold our instance data, our UserDao to interact with the database.</p>
+
+            <p>First let's create our two models for the application. One for our
+            blog posts, the other for our users. This should have been one of the first
+            things we should do but it's okay, we aren't too far into development yet.
+            Create a <strong>User.java</strong> class at:</p>
+
+            <pre>src/main/java/xyz/cafe/model/<strong>User.java</strong></pre>
+
+            <p>Go ahead and copy and past the following code into it: </p>
+
+            <pre>
+package xyz.cafe.model;
+
+public class User {
+
+    long id;
+    String name;
+    String username;
+    String password;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+}
+            </pre>
 
 
+            <p>Now let's create a <strong>Post.java</strong> model or domain
+            in same location:</p>
+
+            <pre>src/main/java/xyz/cafe/model/<strong>Post.java</strong></pre>
+
+            <p>Copy &amp; paste the following code into it.</p>
+
+            <pre>
+package xyz.cafe.model;
+
+public class Post {
+
+    public long id;
+    public String title;
+    public String content;
+    public long userId;
+    public long dateCreated;
+    public String date;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public long getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(long dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+}
+            </pre>
 
             <p class="center space-it">&copy; OpenCafe</p>
 
