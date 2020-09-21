@@ -1956,7 +1956,7 @@ public class SigninServlet extends HttpServlet {
 
             <p>Let's wire it up now. We need to create an authentication routine.
             Our security module will handle most of the heavy lifting, we just now
-            need to configure. Let's start by creating an <strong>AuthServlet</strong>
+            need to configure it. Let's start by creating an <strong>AuthServlet</strong>
             at:</p>
 
             <pre>src/main/java/xyz/cafe/web/<strong>AuthServlet.java</strong></pre>
@@ -1998,14 +1998,115 @@ public class AuthServlet extends HttpServlet {
 }
             </pre>
 
-
             <p>As you can see, we simply get the instance of parakeet, grab the
             username and password from the request and validate the user. When
             storing a user password, please use
-            <strong>io.github.mcroteau.resources.Constants.hash(password)</strong>
+            <strong>io.github.mcroteau.resources.Constants.hash()</strong>
             to hash your password as this is the same hashing algorithm used
-            when validating.</p>
+            when validating during login.</p>
 
+            <p>Now that we have the authentication piece added including
+            the signin.jsp, let's add the logout routine.</p>
+
+            <p>Create a servlet and name it <strong>LogoutServlet.java</strong> : </p>
+
+            <pre>src/main/java/xyz/cafe/<strong>LogoutServlet.java</strong></pre>
+
+            <p>Copy &amp; paste the following code into it</p>
+
+            <pre>
+package xyz.cafe.web;
+
+import io.github.mcroteau.Parakeet;
+import xyz.cafe.common.Constants;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+public class LogoutServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletContext context = req.getServletContext();
+        Parakeet parakeet = (Parakeet) context.getAttribute(Constants.PARAKEET_LOOKUP);
+        parakeet.logout();
+
+        resp.sendRedirect(req.getContextPath() + "/");
+    }
+
+}
+            </pre>
+
+            <p>Now we have a logout routine. We grabbed Parakeet once again, and simply
+            called the logout function.</p>
+
+            <p>With all of this in place, we have no main page yet. We create a
+            Dao for posts which will allow us to create, save, list and update
+            posts but we have no views. Let's start by creating one view for list
+            so when a user browses to the application at:</p>
+
+            <pre>http://localhost:8080/cafe</pre>
+
+            <p>We have something to show them. We are going to show them a list
+            of blog posts, that's what should be shown on the base page, that's
+            what we will give them.</p>
+
+            <p>Create a jsp in the <strong>post</strong> jsp sub directory
+                and name it <strong>list.jsp</strong> like so:</p>
+
+            <pre>src/main/webapp/jsp/post/<strong>list.jsp</strong></pre>
+
+            <p>Copy &amp; paste the following code into it: </p>
+
+            <pre>
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;%@ taglib prefix=&quot;c&quot; uri=&quot;http://java.sun.com/jsp/jstl/core&quot; %&gt;
+&lt;%@ taglib prefix=&quot;parakeet&quot; uri=&quot;/META-INF/tags/parakeet.tld&quot;%&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Cafe : Posts&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;h1&gt;Latest Posts&lt;/h1&gt;
+
+    &lt;c:if test=&quot;${posts != null || posts.size() &gt; 0}&quot;&gt;
+        &lt;div id=&quot;latest-posts&quot;&gt;
+            &lt;c:forEach var=&quot;post&quot; items=&quot;${posts}&quot;&gt;
+                &lt;div class=&quot;post-container&quot;&gt;
+                    &lt;h2&gt;${post.title}&lt;/h2&gt;
+                    &lt;span class=&quot;tiny&quot;&gt;${post.date}&lt;/span&gt;
+                    &lt;div&gt;${post.content}
+                        &lt;a href=&quot;${pageContext.request.contextPath}/edit?id=${post.id}&quot;&gt;Edit&lt;/a&gt;
+                    &lt;/div&gt;
+
+                &lt;/div&gt;
+            &lt;/c:forEach&gt;
+
+        &lt;/div&gt;
+    &lt;/c:if&gt;
+    &lt;c:if test=&quot;${posts == null || posts.size() == 0}&quot;&gt;
+        &lt;p&gt;No posts created yet.
+            &lt;parakeet:isAuthenticated&gt;
+                &lt;a href=&quot;${pageContext.request.contextPath}/create&quot;&gt;Create&lt;/a&gt;
+            &lt;/parakeet:isAuthenticated&gt;
+        &lt;/p&gt;
+    &lt;/c:if&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+
+
+            <p>Now we are getting some where. What are we doing in this jsp?
+            Well, we are first checking to see if there are any posts in the requested
+            attributes, if so, iterating through all of them and displaying the post.
+            If none exist, and the user is authenticated, show the create button.
+            Pretty neat huh?</p>
 
             <p>You have to learn how to walk before you can run!</p>
 
