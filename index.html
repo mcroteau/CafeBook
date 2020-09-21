@@ -2102,11 +2102,56 @@ public class LogoutServlet extends HttpServlet {
             </pre>
 
 
-            <p>Now we are getting some where. What are we doing in this jsp?
-            Well, we are first checking to see if there are any posts in the requested
-            attributes, if so, iterating through all of them and displaying the post.
+            <p>What are we doing in this jsp? Well, we are first checking
+                to see if there are any posts in the requested attributes,
+                if so, iterating through all of them and displaying the post.
             If none exist, and the user is authenticated, show the create button.
-            Pretty neat huh?</p>
+            Pretty neat huh? Let's secure our create screen.</p>
+
+            <p>Open up your <strong>CreateServlet.java</strong> again, we
+            are going to modify/secure it. Make it look like:</p>
+
+            <pre>
+package xyz.cafe.web.post;
+
+import io.github.mcroteau.Parakeet;
+import xyz.cafe.common.Constants;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+public class CreateServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletContext context = req.getServletContext();
+        Parakeet parakeet = (Parakeet) context.getAttribute(Constants.PARAKEET_LOOKUP);
+
+        if(parakeet.isAuthenticated()){
+            req.getRequestDispatcher("/jsp/post/create.jsp").forward(req, resp);
+        }else{
+            resp.sendRedirect(context.getContextPath() + "/signin");
+        }
+    }
+
+}
+            </pre>
+
+
+            <p>Let's run it and see if the login functionality works. Again,
+            control + c to stop and :</p>
+
+            <pre>mvn jetty:run</pre>
+
+            <p>Browse to <strong>/create</strong></p>
+
+            <pre>http://localhost:8080/cafe/create</pre>
+
+            <p>We should be kicked back to the signin screen.</p>
 
             <p>You have to learn how to walk before you can run!</p>
 
