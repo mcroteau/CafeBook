@@ -2765,7 +2765,51 @@ password: <strong>password</strong>
             <pre>Unauthorized yo!</pre>
 
             <p>Simple enough eh?!</p>
-            
+
+            <p>What about styling? Let's try out a new css library called...</p>
+
+            <h3>Millgram</h3>
+
+            <p>All we need to do is in our layouts is to add the CDN
+            references and maybe a small css style for our body so we have a
+            little padding. Copy &amp; paste the following in the
+            head tag below the title in both the </p>
+
+            <pre>src/main/webapp/jsp/layouts/<strong>guest.jsp</strong></pre>
+
+            <p>&amp;</p>
+
+            <pre>src/main/webapp/jsp/layouts/<strong>loggedin.jsp</strong></pre>
+
+            <p>Copy &amp; paste the following in the head sections:</p>
+
+            <pre>
+&lt;!-- Google Fonts --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic&quot;&gt;
+
+&lt;!-- CSS Reset --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css&quot;&gt;
+
+&lt;!-- Milligram CSS --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css&quot;&gt;
+
+&lt;style type=&quot;text/css&quot;&gt;
+    body{
+        padding:20px;
+    }
+&lt;/style&gt;
+            </pre>
+
+            <h2>Wow!</h2>
+
+            <p>All that styling work is done for us! Thank you Milligram.</p>
+
+            <p>Here is what our final application should look like:</p>
+
+            <img src="images/milligram.png" style="width:100%"/>
+
+
+
             <p>You have to learn how to walk before you can run!</p>
 
             <p>Search for ioc</p>
