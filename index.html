@@ -326,6 +326,7 @@ Cafe/src/main/java/xyz/cafe/dao
 Cafe/src/main/java/xyz/cafe/model
 Cafe/src/main/java/xyz/cafe/startup
 Cafe/src/main/java/xyz/cafe/web/post
+Cafe/src/main/webapp/jsp/layouts
 Cafe/src/main/webapp/jsp/post
 Cafe/src/main/WEB-INF</pre>
 
@@ -2576,7 +2577,164 @@ password: <strong>password</strong>
             one by clicking <strong>create</strong>.</p>
 
             <p>Give your post a title, and add content... then click
-            <strong>save!</strong>.</p>
+            <strong>save!</strong>. You should now see an edit screen!</p>
+
+            <img src="images/edit.png" style="width:100%"/>
+
+            <p>We have successfully saved a blog post!!! Let's go to the
+            main screen and see if we can see our post there as well...
+            browse to:</p>
+
+            <pre>http://localhost:8080/cafe</pre>
+
+            <p>You should see something like the following:</p>
+
+            <img src="images/list-uno.png" style="width:100%"/>
+
+            <h3>Yah!</h3>
+
+            <p>We have created a secured blogging application, what's missing though?
+            If you look at the Jsps as of now, we have to copy and paste entire
+            layouts for each jsp. How do we address this issue? Enter
+                <strong>Sitemesh</strong>, a robust layout solution. We use
+            Sitemesh 2 instead of 3 as it has proven to work without issue, no need
+            to fix something that ain't broke!</p>
+
+            <p>So what do we do. Well, if you look at the <strong>pom.xml</strong>
+            we have Sitemesh declared as a dependency. Now we need to configure it.
+            Sitemesh comes with a filter that we need to define... .... ... wait
+            a minute, it's already defined. It is just commented out in our
+            <strong>web.xml</strong>. So let's uncomment it. Look for:</p>
+
+            <pre>
+<strong>&lt;!--</strong>
+&lt;filter&gt;
+    &lt;filter-name&gt;sitemesh&lt;/filter-name&gt;
+    &lt;filter-class&gt;com.opensymphony.sitemesh.webapp.SiteMeshFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;sitemesh&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+<strong>--&gt;</strong>
+            </pre>
+
+            <p>Delete the surrounding comments so that it
+            looks like:</p>
+
+            <pre>
+&lt;filter&gt;
+    &lt;filter-name&gt;sitemesh&lt;/filter-name&gt;
+    &lt;filter-class&gt;com.opensymphony.sitemesh.webapp.SiteMeshFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;sitemesh&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+            </pre>
+
+
+            <p>Next we need to create a <strong>decorators.xml</strong> file
+            that basically tells the application which endpoints to style
+                with a layout and what layouts to use. So go ahead and create
+            <strong>decorators.xml</strong> at:</p>
+
+            <pre>src/main/webapp/WEB-INF/<strong>decorators.xml</strong></pre>
+
+            <p>Copy &amp; paste the following code into it:</p>
+
+            <pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;decorators defaultdir=&quot;/jsp/layouts&quot;&gt;
+    &lt;decorator name=&quot;loggedin&quot; page=&quot;loggedin.jsp&quot;&gt;
+        &lt;pattern&gt;*/create&lt;/pattern&gt;
+        &lt;pattern&gt;*/save&lt;/pattern&gt;
+        &lt;pattern&gt;*/edit&lt;/pattern&gt;
+        &lt;pattern&gt;*/update&lt;/pattern&gt;
+        &lt;pattern&gt;*/delete&lt;/pattern&gt;
+    &lt;/decorator&gt;
+    &lt;decorator name=&quot;guest&quot; page=&quot;guest.jsp&quot;&gt;
+        &lt;pattern&gt;*/&lt;/pattern&gt;
+        &lt;pattern&gt;*/signin&lt;/pattern&gt;
+        &lt;pattern&gt;*/logout&lt;/pattern&gt;
+    &lt;/decorator&gt;
+&lt;/decorators&gt;
+            </pre>
+
+            <p>Here we have defined 2 layouts for our application, one
+            for users that are authenticated and the other for guest users...
+            people that have not logged in.</p>
+
+            <p>Let's create both.</p>
+
+            <p>Start with <strong>guest.jsp</strong> located at: </p>
+
+            <pre>src/main/webapp/jsp/layouts/<strong>guest.jsp</strong></pre>
+
+            <p>Copy &amp; paste the following code in it:</p>
+
+            <pre>
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;%@ taglib uri=&quot;http://www.opensymphony.com/sitemesh/decorator&quot; prefix=&quot;decorator&quot; %&gt;
+&lt;%@ taglib prefix=&quot;parakeet&quot; uri=&quot;/META-INF/tags/parakeet.tld&quot;%&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Cafe : Adore it&lt;/title&gt;
+    &lt;decorator:head /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;parakeet:anonymous&gt;
+        &lt;a href=&quot;${pageContext.request.contextPath}/signin&quot;&gt;Signin&lt;/a&gt;
+    &lt;/parakeet:anonymous&gt;
+
+    &lt;parakeet:isAuthenticated&gt;
+        &lt;parakeet:username/&gt; | &lt;a href=&quot;${pageContext.request.contextPath}/logout&quot;&gt;Logout&lt;/a&gt; |
+        &lt;a href=&quot;${pageContext.request.contextPath}/create&quot;&gt;Create&lt;/a&gt;
+    &lt;/parakeet:isAuthenticated&gt;
+
+    &lt;decorator:body /&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+
+            <p>Now let's create the layout for authenticated users. Create
+            a Jsp named <strong>loggedin.jsp</strong> at:</p>
+
+            <pre>src/main/webapp/layouts/<strong>loggedin.jsp</strong></pre>
+
+            <p>Copy &amp; paste the following code into it:</p>
+
+            <pre>
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;%@ taglib uri=&quot;http://www.opensymphony.com/sitemesh/decorator&quot; prefix=&quot;decorator&quot; %&gt;
+&lt;%@ taglib prefix=&quot;parakeet&quot; uri=&quot;/META-INF/tags/parakeet.tld&quot;%&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Cafe : Welcome back!&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;parakeet:anonymous&gt;
+        &lt;a href=&quot;${pageContext.request.contextPath}/signin&quot;&gt;Signin&lt;/a&gt;
+    &lt;/parakeet:anonymous&gt;
+
+    &lt;parakeet:isAuthenticated&gt;
+        &lt;parakeet:username/&gt; |
+        &lt;a href=&quot;${pageContext.request.contextPath}/logout&quot;&gt;Logout&lt;/a&gt; |
+        &lt;a href=&quot;${pageContext.request.contextPath}/&quot;&gt;Posts&lt;/a&gt;
+
+    &lt;/parakeet:isAuthenticated&gt;
+
+    &lt;decorator:body /&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
 
             <p>You have to learn how to walk before you can run!</p>
 
