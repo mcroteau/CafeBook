@@ -690,7 +690,7 @@ req.getRequestDispatcher("/jsp/post/create.jsp").forward(req, resp);
     &lt;br/&gt;
     &lt;br/&gt;
 
-    &lt;input type=&quot;submit&quot; value=&quot;Save&quot;/&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;Save!&quot;/&gt;
 &lt;/form&gt;
 
 &lt;/body&gt;
@@ -1779,8 +1779,8 @@ UserDao userDao = (UserDao) context.getAttribute(Constants.USER_DAO_LOOKUP);
 
             <pre>java -jar exec/h2-1.4.200.jar</pre>
 
-            <p>We can simply restart our application. First to stop it within the
-            terminaly click control + c. Now we can start again: </p>
+            <p>We can simply restart our application. First to stop it within
+                the terminal click command + c. Now we can start again: </p>
 
             <pre>mvn jetty:run</pre>
 
@@ -2053,7 +2053,7 @@ public class LogoutServlet extends HttpServlet {
 
             <p>We have something to show them. We are going to show them a list
             of blog posts, that's what should be shown on the base page, that's
-            what we will give them.</p>
+            what we will give them, we will also create an edit jsp.</p>
 
             <p>Create a jsp in the <strong>post</strong> jsp sub directory
                 and name it <strong>list.jsp</strong> like so:</p>
@@ -2108,6 +2108,56 @@ public class LogoutServlet extends HttpServlet {
             If none exist, and the user is authenticated, show the create button.
             Pretty neat huh? Let's secure our create screen.</p>
 
+            <p>Create a <strong>edit.jsp</strong> Jsp at:</p>
+
+            <pre>src/main/webapp/jsp/post/<strong>edit.jsp</strong></pre>
+
+            <p>Copy &amp; past the following code into that file:</p>
+
+            <pre>
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;%@ taglib prefix=&quot;c&quot; uri=&quot;http://java.sun.com/jsp/jstl/core&quot; %&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Cafe : Edit Post&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Edit Post&lt;/h1&gt;
+
+&lt;c:if test=&quot;${not empty message}&quot;&gt;
+    &lt;p&gt;&lt;c:out value=&quot;${message}&quot;/&gt;&lt;/p&gt;
+&lt;/c:if&gt;
+
+&lt;form action=&quot;${pageContext.request.contextPath}/update&quot; method=&quot;post&quot;&gt;
+    &lt;input type=&quot;hidden&quot; name=&quot;id&quot; value=&quot;${post.id}&quot;/&gt;
+
+    &lt;label&gt;Title&lt;/label&gt;
+    &lt;input type=&quot;text&quot; name=&quot;title&quot; placeholder=&quot;title&quot; value=&quot;${post.title}&quot;/&gt;
+
+    &lt;br/&gt;
+
+    &lt;label&gt;Content&lt;/label&gt;
+    &lt;textarea name=&quot;content&quot;&gt;${post.content}&lt;/textarea&gt;
+
+    &lt;br/&gt;
+    &lt;br/&gt;
+
+    &lt;input type=&quot;submit&quot; value=&quot;update&quot;/&gt;
+&lt;/form&gt;
+
+
+&lt;form action=&quot;${pageContext.request.contextPath}/delete&quot; method=&quot;post&quot;&gt;
+    &lt;input type=&quot;hidden&quot; name=&quot;id&quot; value=&quot;${post.id}&quot;/&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;Delete&quot;/&gt;
+&lt;/form&gt;
+
+
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+
+
             <p>Open up your <strong>CreateServlet.java</strong> again, we
             are going to modify/secure it. Make it look like:</p>
 
@@ -2141,9 +2191,10 @@ public class CreateServlet extends HttpServlet {
 }
             </pre>
 
+            <p>Simply secured!</p>
 
             <p>Let's run it and see if the login functionality works. Again,
-            control + c to stop and :</p>
+            command + c to stop and :</p>
 
             <pre>mvn jetty:run</pre>
 
@@ -2152,6 +2203,380 @@ public class CreateServlet extends HttpServlet {
             <pre>http://localhost:8080/cafe/create</pre>
 
             <p>We should be kicked back to the signin screen.</p>
+
+            <img src="images/signin.png" style="width:100%"/>
+
+            <p>Our Auth Servlet will fail without it being
+            declared within the <strong>web.xml</strong>. So, while we
+            are at it, we are going to declare all of our serlvets
+            within the <strong>web.xml</strong>.</p>
+
+            <p>So let's do that, update the <strong>web.xml</strong>
+            to look like:</p>
+
+            <pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd&quot; version=&quot;3.1&quot;&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;ListServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.post.ListServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;ListServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.post.CreateServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;CreateServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/create&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;SaveServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.post.SaveServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;SaveServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/save&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;EditServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.post.EditServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;EditServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/edit&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;UpdateServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.post.UpdateServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;UpdateServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/update&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;DeleteServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.post.DeleteServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;DeleteServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/delete&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;SigninServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.SigninServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;SigninServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/signin&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;AuthServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.AuthServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;AuthServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/auth&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;LogoutServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;xyz.cafe.web.LogoutServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;LogoutServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/logout&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;filter&gt;
+        &lt;filter-name&gt;Parakeet&lt;/filter-name&gt;
+        &lt;filter-class&gt;io.github.mcroteau.resources.filters.CacheFilter&lt;/filter-class&gt;
+    &lt;/filter&gt;
+
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;Parakeet&lt;/filter-name&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;/filter-mapping&gt;
+
+    &lt;!--
+    &lt;filter&gt;
+        &lt;filter-name&gt;sitemesh&lt;/filter-name&gt;
+        &lt;filter-class&gt;com.opensymphony.sitemesh.webapp.SiteMeshFilter&lt;/filter-class&gt;
+    &lt;/filter&gt;
+
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;sitemesh&lt;/filter-name&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;/filter-mapping&gt;
+    --&gt;
+
+    &lt;listener&gt;
+        &lt;listener-class&gt;
+            xyz.cafe.startup.AppStartup
+        &lt;/listener-class&gt;
+    &lt;/listener&gt;
+
+&lt;/web-app&gt;
+            </pre>
+
+
+            <p>We are kind of doing it all at once now so let's
+            complete our application by creating servlets for,
+            editing, updating &amp; deleting posts.</p>
+
+            <p>Let's create our <strong>EditServlet.java</strong></p>
+
+            <pre>src/main/java/xyz/cafe/web/post/<strong>EditServlet.java</strong></pre>
+
+            <p>Copy &amp; paste the following into your new EditServlet</p>
+
+            <pre>
+package xyz.cafe.web.post;
+
+import io.github.mcroteau.Parakeet;
+import xyz.cafe.dao.PostDao;
+import xyz.cafe.model.Post;
+import xyz.cafe.common.Constants;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+public class EditServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletContext context = req.getServletContext();
+        Parakeet parakeet = (Parakeet) context.getAttribute(Constants.PARAKEET_LOOKUP);
+        PostDao postDao = (PostDao) context.getAttribute(Constants.POSTS_DAO_LOOKUP);
+
+        long id = Long.parseLong(req.getParameter("id"));
+        String permission = Constants.POST_PREFIX + id;
+        if(parakeet.hasPermission(permission) ||
+            parakeet.hasRole(Constants.ROLE_OWNER)){
+            Post post = postDao.getById(id);
+            req.setAttribute("post", post);
+            req.getRequestDispatcher("/jsp/post/edit.jsp").forward(req, resp);
+        }else{
+            req.getRequestDispatcher("/jsp/unauthorized.jsp").forward(req, resp);
+        }
+    }
+}
+            </pre>
+
+
+            <p>Let's create our <strong>UpdateServlet.java</strong></p>
+
+            <pre>src/main/java/xyz/cafe/web/post/<strong>UpdateServlet.java</strong></pre>
+
+            <p>Copy &amp; paste the following code into it:</p>
+
+            <pre>
+package xyz.cafe.web.post;
+
+import io.github.mcroteau.Parakeet;
+import xyz.cafe.dao.PostDao;
+import xyz.cafe.model.Post;
+import xyz.cafe.common.Constants;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+public class UpdateServlet extends HttpServlet {
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletContext context = req.getServletContext();
+        Parakeet parakeet = (Parakeet) context.getAttribute(Constants.PARAKEET_LOOKUP);
+        PostDao postDao = (PostDao) context.getAttribute(Constants.POSTS_DAO_LOOKUP);
+
+        long id = Long.parseLong(req.getParameter("id"));
+        String permission = Constants.POST_PREFIX + id;
+        if(parakeet.hasPermission(permission)){
+
+            Post post = postDao.getById(id);
+
+            String title = req.getParameter("title");
+            String content = req.getParameter("content");
+
+            post.setTitle(title);
+            post.setContent(content);
+
+            postDao.update(post);
+            req.setAttribute("post", post);
+            req.getRequestDispatcher("/jsp/post/edit.jsp").forward(req, resp);
+        }else{
+            req.getRequestDispatcher("/jsp/unauthorized.jsp").forward(req, resp);
+        }
+    }
+}
+            </pre>
+
+            <p>Let's create our <strong>DeleteServlet.java</strong></p>
+            <pre>src/main/java/xyz/cafe/web/post/<strong>DeleteServlet.java</strong></pre>
+
+            <p>Copy &amp; paste the following code into it:</p>
+
+            <pre>
+package xyz.cafe.web.post;
+
+import io.github.mcroteau.Parakeet;
+import xyz.cafe.dao.PostDao;
+import xyz.cafe.common.Constants;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+public class DeleteServlet extends HttpServlet {
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletContext context = req.getServletContext();
+        Parakeet parakeet = (Parakeet) context.getAttribute(Constants.PARAKEET_LOOKUP);
+        PostDao postDao = (PostDao) context.getAttribute(Constants.POSTS_DAO_LOOKUP);
+
+        if(parakeet.isAuthenticated() &&
+                parakeet.hasRole(Constants.ROLE_OWNER)){
+
+            long id = Long.parseLong(req.getParameter("id"));
+            postDao.delete(id);
+            resp.sendRedirect(context.getContextPath() + "/");
+
+        }else{
+            req.setAttribute("message", "You don't have privileges to do this...");
+            req.getRequestDispatcher("/jsp/unauthorized.jsp").forward(req, resp);
+        }
+    }
+}
+
+            </pre>
+
+            <p>Let's create our <strong>ListServlet.java</strong> that
+            retrieves all blog posts and displays them in a list format.</p>
+
+            <pre>src/main/java/xyz/cafe/web/post/<strong>ListServlet.java</strong></pre>
+
+            <p>Copy &amp; paste the following code into it:</p>
+
+            <pre>
+package xyz.cafe.web.post;
+
+import io.github.mcroteau.Parakeet;
+import xyz.cafe.dao.PostDao;
+import xyz.cafe.model.Post;
+import xyz.cafe.common.Constants;
+import xyz.cafe.common.Utils;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+
+public class ListServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletContext context = req.getServletContext();
+        Parakeet parakeet = (Parakeet) context.getAttribute(Constants.PARAKEET_LOOKUP);
+        PostDao postDao = (PostDao) context.getAttribute(Constants.POSTS_DAO_LOOKUP);
+
+        if(parakeet.isAuthenticated()) {
+            List&lt;Post&gt; posts = postDao.getList();
+            for (Post post : posts) {
+                post.setDate(Utils.getDate(post.getDateCreated()));
+            }
+            req.setAttribute(&quot;posts&quot;, posts);
+        }
+        req.getRequestDispatcher(&quot;/jsp/post/list.jsp&quot;).forward(req, resp);
+    }
+}
+            </pre>
+
+
+            <h1>Okay!</h1>
+
+            <h3>Long overdue</h3>
+
+            <p>Lets see if we can login and create a blog post! Restart
+            the application again with command + c, then:</p>
+
+            <pre>mvn jetty:run</pre>
+
+            <p>Browse to:</p>
+
+            <pre>http://localhost:8080/cafe/signin</pre>
+
+            <p>We have 2 possible users we can log in as, one, the
+            owner, the other a barista. Again, we do this in our startup routine
+            automatically. If you look at <strong>exec/create-db.sql</strong></p>
+
+            <pre>
+insert into accounts values (1, 'owner', 'owner@mail.co', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
+insert into accounts values (2, 'barista', 'barista@mail.co', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
+            </pre>
+
+            <p>Both have <strong>password</strong> as the password, you won't
+            be able to tell by looking at the hash of course, but that is what is
+            being stored. So let's login as the barista and create a blog post.</p>
+
+            <p>Browsing to:</p>
+
+            <pre>http://localhost:8080/cafe/signin</pre>
+
+            <p>Login as the barista</p>
+
+            <pre>
+username: <strong>barista@mail.co</strong>
+password: <strong>password</strong>
+            </pre>
+
+            <p>After logging in you should see the following screen. </p>
+
+            <img src="images/empty.png" style="width:100%"/>
+
+            <p>Yet, another congratulations! Go, ahead and see if you can create
+            one by clicking <strong>create</strong>.</p>
+
+            <p>Give your post a title, and add content... then click
+            <strong>save!</strong>.</p>
 
             <p>You have to learn how to walk before you can run!</p>
 
