@@ -2736,6 +2736,36 @@ password: <strong>password</strong>
 &lt;/html&gt;
             </pre>
 
+            <p>Now, let's restart our application, control + c to stop and :</p>
+
+            <pre>mvn jetty:run</pre>
+
+            <p>Okay, now browse to:</p>
+
+            <pre>http://localhost:8080/cafe</pre>
+
+            <p>You should see something that looks like this:</p>
+
+            <img src="images/posts-layout.png" style="width:100%"/>
+
+            <p>Go ahead! Navigate around... each one of our pages are now
+            quote unquote decorated with layouts. When you add a new view or
+            otherwise endpoint, to decorate, open up the
+            <strong>decorators.xml</strong> file and add your decorator or
+            simply the page to decorate under a layout.</p>
+
+            <p>We forgot one thing... what if we reach a page that we
+            do not have permission to view? Let's create a view/jsp for this
+            and name it <strong>unauthorized.jsp</strong> at:</p>
+
+            <pre>src/main/webapp/jsp/<strong>unauthorized.jsp</strong></pre>
+
+            <p>Copy &amp; paste the following code into it:</p>
+
+            <pre>Unauthorized yo!</pre>
+
+            <p>Simple enough eh?!</p>
+            
             <p>You have to learn how to walk before you can run!</p>
 
             <p>Search for ioc</p>
