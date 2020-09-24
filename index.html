@@ -2769,19 +2769,15 @@ password: <strong>password</strong>
             <p>What about styling? Let's try out a new css library called...</p>
 
             <h3>Millgram</h3>
+            <p><a href="www.milligram.io" target="_blank">milligram.io</a></p>
 
             <p>All we need to do is in our layouts is to add the CDN
             references and maybe a small css style for our body so we have a
             little padding. Copy &amp; paste the following in the
             head tag below the title in both the </p>
 
-            <pre>src/main/webapp/jsp/layouts/<strong>guest.jsp</strong></pre>
-
-            <p>&amp;</p>
-
-            <pre>src/main/webapp/jsp/layouts/<strong>loggedin.jsp</strong></pre>
-
-            <p>Copy &amp; paste the following in the head sections:</p>
+            <p>Copy &amp; paste the following in the head sections of both
+                <strong>guest.jsp</strong> and <strong>loggedin.jsp</strong>:</p>
 
             <pre>
 &lt;!-- Google Fonts --&gt;
@@ -2800,6 +2796,15 @@ password: <strong>password</strong>
 &lt;/style&gt;
             </pre>
 
+            <p>Located at: </p>
+
+            <pre>src/main/webapp/jsp/layouts/<strong>guest.jsp</strong></pre>
+
+            <p>&amp;</p>
+
+            <pre>src/main/webapp/jsp/layouts/<strong>loggedin.jsp</strong></pre>
+
+
             <h2>Wow!</h2>
 
             <p>All that styling work is done for us! Thank you Milligram.</p>
@@ -2808,11 +2813,80 @@ password: <strong>password</strong>
 
             <img src="images/milligram.png" style="width:100%"/>
 
+            <p>So whats next? Well, how about we Springify it.
+            <a href="https://spring.io/">www.spring.io</a>.</p>
+
+            <p><strong>What is Spring?</strong> Spring is a
+            dependency injection or inversion of control framework.
+            What does this mean? It basically means class dependencies
+            can be newed up without you have to write a bunch of newing
+            code. Example: Let's look at our EditServlet.</p>
+
+            <pre>
+public class EditServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ServletContext context = req.getServletContext();
+        Parakeet parakeet = (Parakeet) context.getAttribute(Constants.PARAKEET_LOOKUP);
+        PostDao postDao = (PostDao) context.getAttribute(Constants.POSTS_DAO_LOOKUP);
+
+        long id = Long.parseLong(req.getParameter("id"));
+        String permission = Constants.POST_PREFIX + id;
+        if(parakeet.hasPermission(permission) ||
+            parakeet.hasRole(Constants.ROLE_OWNER)){
+            Post post = postDao.getById(id);
+            req.setAttribute("post", post);
+            req.getRequestDispatcher("/jsp/post/edit.jsp").forward(req, resp);
+        }else{
+            req.getRequestDispatcher("/jsp/unauthorized.jsp").forward(req, resp);
+        }
+    }
+}
+            </pre>
+
+            <p>With Spring we can declare what are called Spring Beans within
+            a configuration pattern either programmatically or via xml config.
+            Here is what the same class would look like.</p>
+
+            <pre>
+public class EditServlet extends HttpServlet {
+
+    @Autowired
+    private PostDao postDao;
+
+    @Autowired
+    private Parakeet parakeet;
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        long id = Long.parseLong(req.getParameter("id"));
+        String permission = Constants.POST_PREFIX + id;
+        if(parakeet.hasPermission(permission) ||
+            parakeet.hasRole(Constants.ROLE_OWNER)){
+            Post post = postDao.getById(id);
+            req.setAttribute("post", post);
+            req.getRequestDispatcher("/jsp/post/edit.jsp").forward(req, resp);
+        }else{
+            req.getRequestDispatcher("/jsp/unauthorized.jsp").forward(req, resp);
+        }
+    }
+}
+            </pre>
+
+            <p>We have reduced the number of lines of code with in the doGet
+            method and now our PostDao and Parakeet instances are automatically
+            instantiated. Using SpringMVC, you can cut down the number of
+            Servlets tremendously. With SpringJdbc you can cut down the number
+            of lines of code as well.</p>
+
+            <p>If you feel like doing this... Spring is great! Im sure you as a
+                programmer have already heard about it. Here is a link to a
+            Spring version.</p>
 
 
             <p>You have to learn how to walk before you can run!</p>
 
-            <p>Search for ioc</p>
 
             <p class="center space-it">&copy; OpenCafe</p>
 
